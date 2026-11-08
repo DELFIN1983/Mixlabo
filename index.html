@@ -11,10 +11,18 @@
 #german-home .tr.all{font-size:clamp(8px,1.05vw,15px)}
 #german-home .tr.drink{font-size:clamp(7px,1.0vw,14px);height:2.6%;top:91.9%;padding:0 1px;overflow:hidden}
 
+
 /* Reviews: isolated additions; original artwork remains unchanged */
 .review-entry{position:absolute;z-index:4;right:2.5%;top:13.5%;padding:7px 13px;border:1px solid #ff74e5;border-radius:22px;background:#140a20;color:#fff;box-shadow:0 0 12px #ed4fba;font-size:clamp(9px,1.2vw,15px)}
 .review-tabs{display:flex;gap:12px;flex-wrap:wrap;margin:15px 0}.review-tabs button{border:1px solid #47dfff;background:#111326;color:#fff;border-radius:18px;padding:10px 15px}.review-tabs button.selected{background:#193f50;border-color:#ff71d5}
 .review-form{display:grid;gap:12px;max-width:620px}.review-form input,.review-form textarea,.review-form select{background:#090b19;color:white;border:1px solid #5c8ea5;border-radius:10px;padding:12px;font:inherit;width:100%}.review-form textarea{min-height:90px;resize:vertical}.review-form label{display:grid;gap:5px}.review-form button{justify-self:start;padding:10px 20px;border-radius:20px;background:#35124b;border:1px solid #ff74e5;color:white}.review-note{color:#a8b6c7;font-size:13px}.review-list{display:grid;gap:10px;margin-top:20px}.review-post{border:1px solid #265c76;border-radius:12px;padding:12px;background:#0b1120}.review-post small{color:#aebccc}.review-post p{white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0}.review-stars{color:#ffd45c}
+
+/* Stable viewport-fitting desktop canvas. */
+@media (min-width:701px){
+ html,body{min-height:100%;height:100%;}
+ body{display:flex;justify-content:center;align-items:center;}
+ .stage{top:auto;transform:none;flex:none;width:min(100vw,150vh);height:min(100vh,66.666667vw);}
+}
 </style></head><body><main class="stage" id="stage"><img class="design" src="design.jpg" alt="MixLabo — утверждённая главная страница"><div id="german-home" aria-hidden="true"></div><div id="hotspots"></div><button class="review-entry" id="review-entry" type="button">Отзывы</button><section class="panel" id="panel" aria-live="polite"></section></main><script>
 const ru={home:'Главная',recipes:'Рецепты',videos:'Видео',ideas:'Идеи',partners:'Партнёры',title:'Популярные рецепты',soon:'Здесь появятся наши собственные видео приготовления напитков.',idea:'Скоро здесь будут новые идеи и сочетания вкусов.',partner:'Здесь появится информация для сотрудничества.',ingredients:'Ингредиенты',method:'Приготовление',back:'Назад к рецептам',reviews:'Отзывы',reviewRecipe:'О рецептах',reviewSite:'О сайте',reviewName:'Имя (необязательно)',reviewText:'Ваш комментарий',reviewRating:'Оценка',reviewChoose:'Выберите рецепт',reviewSend:'Опубликовать',reviewEmpty:'Пока нет комментариев.',reviewSaved:'Комментарий сохранён на этом устройстве.',reviewNote:'Демо: комментарии видны только в этом браузере и автоматически удаляются через 72 часа. Для общего доступа понадобится сервер.',reviewRequired:'Напишите комментарий.',reviewLimit:'Максимум 500 символов.'};
 const de={home:'Startseite',recipes:'Rezepte',videos:'Videos',ideas:'Ideen',partners:'Partner',title:'Beliebte Rezepte',soon:'Hier erscheinen bald unsere eigenen Videos zur Getränkezubereitung.',idea:'Hier erscheinen neue Geschmacksideen.',partner:'Hier finden Sie künftig Informationen zur Zusammenarbeit.',ingredients:'Zutaten',method:'Zubereitung',back:'Zurück zu Rezepten',reviews:'Bewertungen',reviewRecipe:'Zu Rezepten',reviewSite:'Zur Website',reviewName:'Name (optional)',reviewText:'Ihr Kommentar',reviewRating:'Bewertung',reviewChoose:'Rezept auswählen',reviewSend:'Veröffentlichen',reviewEmpty:'Noch keine Kommentare.',reviewSaved:'Kommentar auf diesem Gerät gespeichert.',reviewNote:'Demo: Kommentare sind nur in diesem Browser sichtbar und werden nach 72 Stunden automatisch gelöscht. Für alle Besucher ist ein Server nötig.',reviewRequired:'Bitte Kommentar eingeben.',reviewLimit:'Maximal 500 Zeichen.'};
@@ -45,9 +53,96 @@ let reviewTab='recipe';
 function loadReviews(){let rows=[];try{rows=JSON.parse(localStorage.getItem(REVIEW_KEY)||'[]');if(!Array.isArray(rows))rows=[]}catch(e){}const now=Date.now();rows=rows.filter(r=>r&&Number.isFinite(r.time)&&r.time<=now&&now-r.time<REVIEW_LIFE&&typeof r.text==='string');try{localStorage.setItem(REVIEW_KEY,JSON.stringify(rows))}catch(e){}return rows}
 function safe(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function reviewMarkup(t){return `<h1>${t.reviews}</h1><div class="review-tabs"><button type="button" data-tab="recipe" class="${reviewTab==='recipe'?'selected':''}">${t.reviewRecipe}</button><button type="button" data-tab="site" class="${reviewTab==='site'?'selected':''}">${t.reviewSite}</button></div><form class="review-form" id="review-form">${reviewTab==='recipe'?`<label>${t.reviewChoose}<select name="drink">${items.map((r,i)=>`<option value="${i}">${safe(r[lang])}</option>`).join('')}</select></label>`:''}<label>${t.reviewName}<input name="author" maxlength="40" autocomplete="nickname"></label><label>${t.reviewRating}<select name="rating">${[5,4,3,2,1].map(n=>`<option value="${n}">${'★'.repeat(n)}${'☆'.repeat(5-n)}</option>`).join('')}</select></label><label>${t.reviewText}<textarea name="comment" maxlength="500" required></textarea></label><button type="submit">${t.reviewSend}</button><div id="review-feedback" role="status"></div></form><p class="review-note">${t.reviewNote}</p><div id="review-list" class="review-list"></div>`}
-function drawReviews(t){const box=document.getElementById('review-list');if(!box)return;const rows=loadReviews().filter(r=>r.kind===reviewTab).reverse();box.innerHTML=rows.length?rows.map(r=>`<article class="review-post"><strong>${safe(r.author|| (lang==='ru'?'Гость':'Gast'))}</strong> <span class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span> ${r.kind==='recipe'?`<span>· ${safe(items[r.drink]?.[lang]||'')}</span>`:''}<p>${safe(r.text)}</p><small>${new Date(r.time).toLocaleString(lang==='ru'?'ru-RU':'de-DE')}</small></article>`).join(''):`<p class="muted">${t.reviewEmpty}</p>`}
+function drawReviews(t){const box=document.getElementById('review-list');if(!box)return;const rows=loadReviews().filter(r=>r.kind===reviewTab).reverse();box.innerHTML=rows.length?rows.map(r=>`<article class="review-post"><strong>${safe(r.author|| (lang==='ru'?'Гость':'Gast'))}</strong> <span class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span> ${r.kind==='recipe'?`<span>· ${safe((items[r.drink] ? items[r.drink][lang] : ''))}</span>`:''}<p>${safe(r.text)}</p><small>${new Date(r.time).toLocaleString(lang==='ru'?'ru-RU':'de-DE')}</small></article>`).join(''):`<p class="muted">${t.reviewEmpty}</p>`}
 function wireReviews(t){document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{reviewTab=b.dataset.tab;render()});const f=document.getElementById('review-form');f.onsubmit=e=>{e.preventDefault();const fd=new FormData(f),message=String(fd.get('comment')||'').trim();if(!message){document.getElementById('review-feedback').textContent=t.reviewRequired;return}if(message.length>500){document.getElementById('review-feedback').textContent=t.reviewLimit;return}let rows=loadReviews();rows.push({kind:reviewTab,drink:reviewTab==='recipe'?Number(fd.get('drink')):null,author:String(fd.get('author')||'').trim().slice(0,40),rating:Number(fd.get('rating'))||5,text:message,time:Date.now()});try{localStorage.setItem(REVIEW_KEY,JSON.stringify(rows));f.reset();document.getElementById('review-feedback').textContent=t.reviewSaved;drawReviews(t)}catch(e){document.getElementById('review-feedback').textContent=lang==='ru'?'Не удалось сохранить отзыв в браузере.':'Speichern im Browser fehlgeschlagen.'}};drawReviews(t)}
 document.getElementById('review-entry').onclick=()=>show('reviews');
 // Recheck expiry when visitors revisit or interact with the reviews view.
 loadReviews();render();
+</script><script>
+/* MixLabo responsive companion, 2026-11-08. Requires the current index.html. */
+(() => {
+  const style = document.createElement('style');
+  style.textContent = `
+    #mixlabo-mobile{display:none}
+    @media (max-width:700px){
+      html,body{width:100%;height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto;background:#05030a}
+      .stage{width:100%;min-height:100dvh;height:auto;top:auto;transform:none;overflow:visible;margin:0}
+      .stage>.design,.stage>#german-home,.stage>#hotspots,.stage>.review-entry{display:none!important}
+      #mixlabo-mobile{display:block;min-height:100dvh;padding:17px 14px 30px;color:#fff;background:radial-gradient(ellipse at 90% 22%,#241138 0%,transparent 42%),radial-gradient(ellipse at 12% 60%,#092034 0%,transparent 50%),#05030b}
+      #mixlabo-mobile[hidden]{display:none!important}
+      .ml-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:16px}
+      .ml-logo{font-size:clamp(30px,8vw,44px);font-weight:800;font-style:italic;letter-spacing:-1px;background:linear-gradient(105deg,#ff62d5 20%,#fcbf43 55%,#51dfff 85%);color:transparent;background-clip:text;-webkit-background-clip:text;filter:drop-shadow(0 0 7px #a31aab)}
+      .ml-langs{display:flex;gap:5px;flex-shrink:0}
+      .ml-langs button{background:#130d22;border:1px solid #a74a9d;border-radius:18px;color:#fff;font-size:13px;padding:9px 10px;min-height:42px}
+      .ml-langs button[aria-pressed=true]{border-color:#ff74df;box-shadow:0 0 9px #ff55be}
+      .ml-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin-bottom:17px}
+      .ml-nav button{min-width:0;padding:9px 1px;background:#111021;color:#fff;border:1px solid #42264c;border-radius:11px;font-size:clamp(9px,2.4vw,12px);line-height:1.3;min-height:57px}
+      .ml-nav span{display:block;font-size:21px;margin-bottom:2px}
+      .ml-banner{position:relative;overflow:hidden;border-radius:17px;border:1px solid #63346b;background:linear-gradient(140deg,#170b23,#0b0c20);padding:21px 18px 17px;box-shadow:0 0 26px #a02c812d}
+      .ml-banner h1{line-height:1.1;font-size:clamp(32px,9.5vw,50px);margin:0 0 13px}
+      .ml-pink{color:#ff67da;text-shadow:0 0 12px #ff00a8}.ml-green{color:#76ff7d;text-shadow:0 0 10px #29eb57}.ml-yellow{color:#ffe17c;text-shadow:0 0 11px #ffb424}
+      .ml-banner p{color:#ecdbed;margin:0 0 18px;font-size:14px;max-width:290px}
+      .ml-banner button,.ml-review{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border:1px solid #fd6ddb;border-radius:26px;color:#fff;background:#29112f;box-shadow:0 0 12px #f04bb960;padding:10px 16px;font-weight:bold}
+      .ml-banner-art{width:100%;height:clamp(130px,39vw,210px);object-fit:cover;object-position:center;border-radius:13px;margin-top:18px;border:1px solid #79386a}
+      .ml-cats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:16px 0 22px}
+      .ml-cats button{border:1px solid #fd79dd;background:#170c25;color:white;min-height:49px;border-radius:13px;font-size:13px;box-shadow:0 0 9px #d247a247;padding:9px 5px}
+      .ml-cats button:nth-child(2),.ml-cats button:nth-child(5){border-color:#4ce9ff;box-shadow:0 0 9px #1fd7ec55}
+      .ml-cats button:nth-child(3),.ml-cats button:nth-child(6){border-color:#ffd55b;box-shadow:0 0 9px #edaf3355}
+      .ml-section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0 13px}
+      .ml-section-title h2{margin:0;color:#9ddaff;font-size:clamp(20px,5.5vw,27px);font-style:italic;text-shadow:0 0 8px #42a9fa}
+      .ml-section-title button{background:none;border:0;color:#67eaff;text-decoration:underline;font-size:12px}
+      .ml-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+      .ml-card{overflow:hidden;min-width:0;border:1px solid #d65ad6;border-radius:13px;background:#110c1b;color:#fff;padding:0 0 10px;text-align:left;box-shadow:0 0 10px #e545b33b}
+      .ml-card:nth-child(2n){border-color:#31dff6;box-shadow:0 0 10px #30d9f53b}
+      .ml-card img{display:block;width:100%;aspect-ratio:1.25/1;object-fit:cover}
+      .ml-card strong{display:block;font-size:14px;padding:10px 9px 1px;line-height:1.3}
+      .ml-review{width:100%;margin-top:20px}
+      .panel{position:relative;inset:auto;min-height:100dvh;overflow:visible;padding:17px 14px 38px;background:radial-gradient(ellipse at 80% 5%,#241036 0%,#080811 52%,#000 100%)}
+      .bar{gap:12px}.brand{font-size:32px}
+      .nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;width:100%}
+      .nav button{font-size:12px;padding:10px 5px;min-height:43px;white-space:normal}
+      .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+      .card img{height:130px;object-fit:cover}
+      .card strong{font-size:13px;line-height:1.3}
+      .recipe img{float:none;display:block;width:100%;max-height:260px;object-fit:cover;margin:0 0 16px}
+      .review-form{max-width:100%}.review-tabs button{flex:1;min-height:44px}
+      h1{font-size:26px}h2{font-size:21px}
+    }
+    @media(max-width:360px){.ml-nav button{font-size:9px}.ml-card strong{font-size:12px}.ml-cats button{font-size:12px}}
+  `;
+  document.head.appendChild(style);
+  const mobile = document.createElement('div');
+  mobile.id = 'mixlabo-mobile';
+  mobile.setAttribute('aria-label','MixLabo mobile homepage');
+  document.getElementById('stage').insertBefore(mobile, document.getElementById('panel'));
+  function paintMobile(){
+    if (typeof lang === 'undefined' || typeof view === 'undefined') return;
+    mobile.hidden = view !== 'home';
+    if (view !== 'home') return;
+    const german = lang === 'de';
+    const navNames = german ? ['Start','Rezepte','Videos','Ideen','Partner'] : ['Главная','Рецепты','Видео','Идеи','Партнёры'];
+    const cats = german ? ['Smoothies','Cocktails','Limonaden','Detox','Energie','Gesundheit'] : ['Смузи','Коктейли','Лимонады','Детокс','Энергия','Здоровье'];
+    const intro = german ? 'Einfache Rezepte · Frische Aromen · Ideen für jede Stimmung' : 'Простые рецепты · Яркие вкусы · Идеи для любого настроения';
+    mobile.innerHTML = `
+      <header class="ml-head"><div class="ml-logo">🍸 MixLabo</div><div class="ml-langs">
+        <button type="button" data-ml-lang="ru" aria-pressed="${!german}">🇷🇺 RU</button>
+        <button type="button" data-ml-lang="de" aria-pressed="${german}">🇩🇪 DE</button>
+      </div></header>
+      <nav class="ml-nav" aria-label="${german?'Navigation':'Навигация'}">${['home','recipes','videos','ideas','partners'].map((x,i)=>`<button type="button" data-ml-go="${x}"><span>${['⌂','🍸','▶','💡','🤝'][i]}</span>${navNames[i]}</button>`).join('')}</nav>
+      <section class="ml-banner"><h1><span class="ml-pink">${german?'Cocktails':'Коктейли'}</span><br><span class="ml-green">${german?'Smoothies':'Смузи'}</span><br><span class="ml-yellow">${german?'Limonaden':'Лимонады'}</span></h1>
+        <p>${intro}</p><button type="button" data-ml-go="recipes">${german?'Zu den Rezepten →':'Перейти к рецептам →'}</button>
+        <img class="ml-banner-art" src="design.jpg" alt="MixLabo"></section>
+      <div class="ml-cats">${cats.map(c=>`<button type="button" data-ml-go="recipes">${c}</button>`).join('')}</div>
+      <section aria-label="${german?'Beliebte Rezepte':'Популярные рецепты'}"><div class="ml-section-title"><h2>${german?'Beliebte Rezepte':'Популярные рецепты'}</h2><button type="button" data-ml-go="recipes">${german?'Alle ansehen →':'Все рецепты →'}</button></div>
+      <div class="ml-grid">${items.map((r,i)=>`<button class="ml-card" type="button" data-ml-go="item${i}"><img src="${r.img}" alt="" loading="lazy"><strong>${r[lang]}</strong></button>`).join('')}</div></section>
+      <button type="button" class="ml-review" data-ml-go="reviews">⭐ ${german?'Bewertungen':'Отзывы'}</button>`;
+    mobile.querySelectorAll('[data-ml-go]').forEach(b=>b.addEventListener('click',()=>{show(b.dataset.mlGo);window.scrollTo(0,0)}));
+    mobile.querySelectorAll('[data-ml-lang]').forEach(b=>b.addEventListener('click',()=>{lang=b.dataset.mlLang;render()}));
+  }
+  // Original desktop logic (including reviews and translations) remains untouched.
+  const originalRender = render;
+  render = function(){originalRender();paintMobile()};
+  paintMobile();
+})();
+
 </script></body></html>
