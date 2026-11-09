@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MixLabo Admin — отзывы</title>
+<style>
+:root{color-scheme:dark;font-family:Arial,sans-serif}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 85% 5%,#26103f,#090e24 52%,#070815);color:#f5f5ff}main{max-width:950px;margin:auto;padding:24px 16px 60px}header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}h1{margin:0;color:#ff70d3;text-shadow:0 0 10px #f09;font-size:32px}h2{color:#6de8ff}p{line-height:1.5}.panel,.review{background:#0e1930;border:1px solid #315c80;border-radius:16px;padding:20px;margin-top:18px;box-shadow:0 0 16px #00bfff15}.review{overflow-wrap:anywhere}label{display:block;margin:14px 0 6px}input{display:block;width:100%;max-width:510px;background:#081122;border:1px solid #4bb8d8;border-radius:9px;padding:12px;color:white;font-size:16px}button{cursor:pointer;border:1px solid #ff7bd7;border-radius:22px;padding:10px 15px;background:#361449;color:white;font-weight:bold;margin:4px 6px 4px 0;min-height:42px}button:hover{background:#55305c}button:disabled{opacity:.5;cursor:wait}.danger{border-color:#ff8181;background:#4a1b30}.soft{border-color:#68d4e8;background:#123345}.success{border-color:#68ffab;background:#17402e}.meta{color:#bed0e2;font-size:14px}.stars{color:#ffd65b}.status{min-height:22px;color:#8ef6ef}.error{color:#ff8c99}#list{display:grid;gap:12px}.review p{white-space:pre-wrap}.hide{display:none!important}a{color:#6ee8ff}.actions{display:flex;flex-wrap:wrap}.pill{display:inline-block;border-radius:50px;padding:5px 9px;background:#1a2b45;font-size:12px}
+</style>
+</head>
+<body><main>
+<header><h1>🍹 MixLabo Admin</h1><div><a href="./index.html">← На сайт</a> <button id="lang" class="soft" type="button">🇩🇪 DE</button></div></header>
+<section class="panel" id="loginPanel"><h2 id="loginTitle">Вход администратора</h2><form id="loginForm"><label id="emailLabel" for="email">Электронная почта</label><input type="email" id="email" autocomplete="username" required><label id="passwordLabel" for="password">Пароль</label><input type="password" id="password" autocomplete="current-password" required><p><button type="submit" id="loginButton">Войти</button></p></form></section>
+<section class="panel hide" id="adminPanel"><h2 id="reviewsTitle">Управление отзывами</h2><div><button class="soft" id="reload" type="button">Обновить</button><button class="soft" id="logout" type="button">Выйти</button></div><p class="meta" id="count"></p><div id="list"></div></section>
+<p class="status" id="status" role="status" aria-live="polite"></p>
+</main>
+<script>
+'use strict';
+// Public project URL and publishable key, identical to the published MixLabo index.html.
+// NEVER paste a service_role, sb_secret_ key, or admin password into this file.
+const URL='https://afmqzlfqrzaguqhlqels.supabase.co';
+const KEY='sb_publishable_ToBvHj5z6zQ3btmTvHZWNQ_BEMolySP';
+let token=null, expiry=0, busy=false, language='ru';
+const $=id=>document.getElementById(id);
+const dictionary={
+ru:{loginTitle:'Вход администратора',emailLabel:'Электронная почта',passwordLabel:'Пароль',loginButton:'Войти',reviewsTitle:'Управление отзывами',reload:'Обновить',logout:'Выйти',pending:'Ожидает проверки',approved:'Одобрен',approve:'Одобрить',reject:'Отклонить',remove:'Удалить',empty:'Отзывов пока нет',count:'Всего отзывов: ',working:'Выполняется…',loading:'Загрузка отзывов…',signed:'Вход выполнен',badLogin:'Не удалось войти. Проверь почту и пароль.',unauthorized:'Сессия закончилась. Войди снова.',failed:'Ошибка запроса: ',deleteConfirm:'Удалить отзыв навсегда?',done:'Изменения сохранены',rating:'Оценка',recipe:'Рецепт',site:'О сайте'},
+de:{loginTitle:'Administrator-Anmeldung',emailLabel:'E-Mail-Adresse',passwordLabel:'Passwort',loginButton:'Anmelden',reviewsTitle:'Bewertungen verwalten',reload:'Aktualisieren',logout:'Abmelden',pending:'Wartet auf Freigabe',approved:'Freigegeben',approve:'Freigeben',reject:'Ablehnen',remove:'Löschen',empty:'Noch keine Bewertungen',count:'Bewertungen insgesamt: ',working:'Wird verarbeitet…',loading:'Bewertungen werden geladen…',signed:'Angemeldet',badLogin:'Anmeldung fehlgeschlagen. E-Mail und Passwort prüfen.',unauthorized:'Sitzung abgelaufen. Bitte erneut anmelden.',failed:'Anfrage fehlgeschlagen: ',deleteConfirm:'Bewertung endgültig löschen?',done:'Änderung gespeichert',rating:'Bewertung',recipe:'Rezept',site:'Zur Website'}};
+const t=()=>dictionary[language];
+function status(message,isError=false){$('status').textContent=message;$('status').className=isError?'status error':'status'}
+function setBusy(v){busy=v;document.querySelectorAll('button').forEach(x=>{if(x.id!=='lang')x.disabled=v})}
+function headers(){return {'apikey':KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'}}
+function logout(message=''){token=null;expiry=0;$('adminPanel').classList.add('hide');$('loginPanel').classList.remove('hide');$('password').value='';$('list').replaceChildren();status(message)}
+async function request(path,options={}){
+if(!token||Date.now()>expiry){logout(t().unauthorized);throw Error(t().unauthorized)}
+const response=await fetch(URL+'/rest/v1/reviews'+path,{...options,headers:{...headers(),...(options.headers||{})},cache:'no-store'});
+if(response.status===401){logout(t().unauthorized);throw Error(t().unauthorized)}
+if(!response.ok){let msg='HTTP '+response.status;try{let body=await response.json();msg+=' '+(body.message||body.code||'')}catch{}throw Error(msg)}
+return response;
+}
+function applyLanguage(){const d=t();for(const id of ['loginTitle','emailLabel','passwordLabel','loginButton','reviewsTitle','reload','logout'])$(id).textContent=d[id];$('lang').textContent=language==='ru'?'🇩🇪 DE':'🇷🇺 RU';document.documentElement.lang=language}
+$('lang').onclick=()=>{language=language==='ru'?'de':'ru';applyLanguage();if(token)load()};
+$('loginForm').onsubmit=async event=>{
+event.preventDefault();if(busy)return;setBusy(true);status(t().working);
+try{
+const response=await fetch(URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({email:$('email').value.trim(),password:$('password').value})});
+if(!response.ok)throw Error(t().badLogin);
+const body=await response.json();if(!body.access_token)throw Error(t().badLogin);
+token=body.access_token;expiry=Date.now()+(Math.max(0,body.expires_in||3600)-30)*1000;
+$('password').value='';$('loginPanel').classList.add('hide');$('adminPanel').classList.remove('hide');status(t().signed);await load();
+}catch(e){status(e.message||t().badLogin,true)}finally{setBusy(false)}
+};
+function makeButton(label,cls,action){const b=document.createElement('button');b.type='button';b.className=cls;b.textContent=label;b.onclick=action;return b}
+async function load(){if(!token)return;status(t().loading);try{
+const response=await request('?select=id,created_at,name,comment,rating,approved,recipe_id&order=created_at.desc&limit=300');
+const rows=await response.json();$('count').textContent=t().count+rows.length;const container=$('list');container.replaceChildren();
+if(!rows.length){const p=document.createElement('p');p.textContent=t().empty;container.append(p)}
+for(const r of rows){
+const article=document.createElement('article');article.className='review';
+const top=document.createElement('div');const name=document.createElement('strong');name.textContent=r.name|| (language==='ru'?'Гость':'Gast');top.append(name);
+const pill=document.createElement('span');pill.className='pill';pill.style.marginLeft='12px';pill.textContent=r.approved?t().approved:t().pending;top.append(pill);article.append(top);
+const meta=document.createElement('p');meta.className='meta';const when=new Date(r.created_at);meta.textContent='#'+r.id+' · '+(Number.isNaN(when.getTime())?'':when.toLocaleString(language==='ru'?'ru-RU':'de-DE'))+' · '+t().rating+': '+r.rating+' ★ · '+(r.recipe_id||t().site);article.append(meta);
+const comment=document.createElement('p');comment.textContent=r.comment||'';article.append(comment);
+const actions=document.createElement('div');actions.className='actions';
+if(!r.approved)actions.append(makeButton(t().approve,'success',()=>change(r.id,true)));
+else actions.append(makeButton(t().reject,'soft',()=>change(r.id,false)));
+actions.append(makeButton(t().remove,'danger',()=>removeReview(r.id)));
+article.append(actions);container.append(article);
+}
+status('');}catch(e){status(t().failed+e.message,true)}
+}
+async function change(id,approved){if(busy)return;setBusy(true);status(t().working);try{await request('?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({approved})});status(t().done);await load()}catch(e){status(t().failed+e.message,true)}finally{setBusy(false)}}
+async function removeReview(id){if(busy||!confirm(t().deleteConfirm))return;setBusy(true);status(t().working);try{await request('?id=eq.'+encodeURIComponent(id),{method:'DELETE'});status(t().done);await load()}catch(e){status(t().failed+e.message,true)}finally{setBusy(false)}}
+$('reload').onclick=()=>load();$('logout').onclick=()=>logout();applyLanguage();
+</script>
+</body></html>
