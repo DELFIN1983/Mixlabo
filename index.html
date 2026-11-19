@@ -320,5 +320,57 @@ render();
 })();
 </script>
 
- 
+ <script>
+(() => {
+  const panel = document.getElementById('panel');
+  const video = document.getElementById('mixlabo-video');
+  const recipe = document.getElementById('tropical-recipe');
+
+  if (!panel || !video || !recipe) return;
+
+  function placeRecipeSideBySide() {
+    const isVideosPage = typeof view !== 'undefined' && view === 'videos';
+
+    if (!isVideosPage) return;
+
+    panel.style.display = 'flex';
+    panel.style.flexDirection = window.innerWidth < 900 ? 'column' : 'row';
+    panel.style.justifyContent = 'center';
+    panel.style.alignItems = 'flex-start';
+    panel.style.gap = '24px';
+    panel.style.flexWrap = 'wrap';
+
+    video.style.display = 'block';
+    recipe.style.display = 'block';
+
+    video.style.margin = '0';
+    recipe.style.margin = '0';
+
+    video.style.flex = '0 0 360px';
+    video.style.maxWidth = '360px';
+
+    recipe.style.flex = '0 0 320px';
+    recipe.style.maxWidth = '320px';
+  }
+
+  const oldShow = typeof show === 'function' ? show : null;
+  if (oldShow) {
+    show = function(v) {
+      oldShow(v);
+      placeRecipeSideBySide();
+    };
+  }
+
+  const oldRender = typeof render === 'function' ? render : null;
+  if (oldRender) {
+    render = function() {
+      oldRender();
+      placeRecipeSideBySide();
+    };
+  }
+
+  window.addEventListener('resize', placeRecipeSideBySide);
+  placeRecipeSideBySide();
+})();
+</script>
 </body></html>
