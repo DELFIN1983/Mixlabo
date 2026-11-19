@@ -291,5 +291,34 @@ render();
 })();
 </script>
 
+<script>
+(() => {
+  const panel = document.getElementById('panel');
+  const video = document.getElementById('mixlabo-video');
+  const recipe = document.getElementById('tropical-recipe');
+
+  if (!panel || !video || !recipe) return;
+
+  function update() {
+    const active = typeof view !== 'undefined'
+      && view === 'videos';
+
+    if (active) {
+      if (video.parentElement !== panel) {
+        panel.append(video, recipe);
+      }
+      video.style.display = 'block';
+      recipe.style.display = 'block';
+    }
+  }
+
+  new MutationObserver(update).observe(panel, {
+    childList: true
+  });
+
+  update();
+})();
+</script>
+
  
 </body></html>
