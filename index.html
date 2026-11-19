@@ -373,4 +373,30 @@ render();
   placeRecipeSideBySide();
 })();
 </script>
+
+<style>
+#panel:has(#mixlabo-video) {
+  display: block !important;
+}
+#panel #mixlabo-video {
+  float: left !important;
+  width: 48% !important;
+  max-width: none !important;
+  margin: 0 2% 0 0 !important;
+}
+#panel #tropical-recipe {
+  float: left !important;
+  width: 48% !important;
+  max-width: none !important;
+  margin: 0 !important;
+}
+@media (max-width: 700px) {
+  #panel #mixlabo-video,
+  #panel #tropical-recipe {
+    float: none !important;
+    width: 100% !important;
+    margin: 12px 0 !important;
+  }
+}
+</style>
 </body></html>
