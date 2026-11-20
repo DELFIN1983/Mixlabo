@@ -401,4 +401,38 @@ render();
   }
 }
 </style>
+ 
+<script>
+document.addEventListener('change', function(e) {
+  if (!e.target.matches('select[name="drink"]')) return;
+
+  const select = e.target;
+  const index = Number(select.value);
+  const form = select.closest('form');
+  if (!form) return;
+
+  let img = form.querySelector('.selected-drink-photo');
+
+  if (!img) {
+    img = document.createElement('img');
+    img.className = 'selected-drink-photo';
+    img.style.cssText =
+      'display:block;width:180px;max-width:100%;' +
+      'height:auto;border-radius:16px;margin:15px 0;' +
+      'box-shadow:0 0 16px #c837ff;';
+    select.closest('label').after(img);
+  }
+
+  if (select.value === '' || !Number.isInteger(index) ||
+      index < 0 || index > 5) {
+    img.style.display = 'none';
+    return;
+  }
+
+  img.src = 'drink' + (index + 1) + '.jpg';
+  img.alt = select.options[select.selectedIndex].text;
+  img.style.display = 'block';
+});
+</script>
+
 </body></html>
