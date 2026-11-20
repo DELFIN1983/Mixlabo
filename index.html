@@ -331,7 +331,11 @@ render();
   function placeRecipeSideBySide() {
     const isVideosPage = typeof view !== 'undefined' && view === 'videos';
 
-    if (!isVideosPage) return;
+   if (!isVideosPage) {
+  panel.style.removeProperty('display');
+  panel.style.removeProperty('flex-direction');
+  return;
+}
 
     panel.style.display = 'flex';
     panel.style.flexDirection = window.innerWidth < 900 ? 'column' : 'row';
