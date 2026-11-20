@@ -220,6 +220,46 @@ render();
   </div>
 </div>
 
+ 
+<section id="strawberry-milkshake" style="display:none;width:100%;clear:both;margin:30px auto;">
+  <div style="display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-start;gap:24px;">
+
+    <div style="width:360px;max-width:100%;text-align:center;color:white;">
+      <h2>🍓 Strawberry Milkshake</h2>
+      <video controls playsinline preload="metadata" style="width:100%;border-radius:16px;">
+        <source src="MixLabo_Strawberry_Milkshake.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <div style="width:320px;max-width:100%;padding:18px;background:#1b1830;color:white;border-radius:16px;box-sizing:border-box;">
+
+      <div id="strawberry-ru">
+        <h3>🍓 Клубничный милкшейк</h3>
+        <h4>Ингредиенты (1 порция)</h4>
+        <p>Клубника — 120 г<br>Молоко — 150 мл<br>Ванильное мороженое — 80 г<br>Лёд — 3 кубика<br>Взбитые сливки и клубника — для украшения</p>
+        <h4>Приготовление</h4>
+        <p>1. Вымойте клубнику и удалите чашелистики.</p>
+        <p>2. Взбейте клубнику, молоко и ванильное мороженое в блендере до однородности.</p>
+        <p>3. Положите лёд в высокий бокал Hurricane.</p>
+        <p>4. Перелейте коктейль в бокал, украсьте взбитыми сливками и свежей клубникой.</p>
+      </div>
+
+      <div id="strawberry-de" style="display:none;">
+        <h3>🍓 Erdbeer-Milchshake</h3>
+        <h4>Zutaten (1 Portion)</h4>
+        <p>Erdbeeren — 120 g<br>Milch — 150 ml<br>Vanilleeis — 80 g<br>Eiswürfel — 3 Stück<br>Schlagsahne und Erdbeeren zum Garnieren</p>
+        <h4>Zubereitung</h4>
+        <p>1. Erdbeeren waschen und die Kelchblätter entfernen.</p>
+        <p>2. Erdbeeren, Milch und Vanilleeis im Mixer cremig pürieren.</p>
+        <p>3. Drei Eiswürfel in ein hohes Hurricane-Glas geben.</p>
+        <p>4. Den Milchshake ins Glas gießen und mit Schlagsahne und frischen Erdbeeren garnieren.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+ 
 
 <script>
 (function () {
@@ -451,6 +491,69 @@ if (reviewPanel) {
 }
 showInitialPhoto();
 
+</script>
+
+<script>
+(() => {
+  const strawberry = document.getElementById('strawberry-milkshake');
+  const panel = document.getElementById('panel');
+  if (!strawberry || !panel) return;
+
+  const marker = document.createComment('strawberry-home');
+  strawberry.before(marker);
+
+  let german = typeof lang !== 'undefined' && lang === 'de';
+
+  function syncStrawberry() {
+    const videos = typeof view !== 'undefined' && view === 'videos';
+
+    if (videos) {
+      panel.appendChild(strawberry);
+      strawberry.style.display = 'block';
+    } else {
+      marker.after(strawberry);
+      strawberry.style.display = 'none';
+      strawberry.querySelector('video')?.pause();
+    }
+
+    document.getElementById('strawberry-ru').style.display =
+      german ? 'none' : 'block';
+    document.getElementById('strawberry-de').style.display =
+      german ? 'block' : 'none';
+  }
+
+  function parkStrawberry() {
+    marker.after(strawberry);
+    strawberry.style.display = 'none';
+  }
+
+  const oldShow = show;
+  show = function(v) {
+    parkStrawberry();
+    oldShow(v);
+    syncStrawberry();
+  };
+
+  const oldRender = render;
+  render = function() {
+    parkStrawberry();
+    oldRender();
+    syncStrawberry();
+  };
+
+  document.addEventListener('click', (e) => {
+    const button = e.target.closest('button');
+    if (!button) return;
+    const value = button.getAttribute('data-ml-lang') ||
+                  button.getAttribute('data-lang') ||
+                  button.textContent.trim().toLowerCase();
+    if (value === 'de' || value === 'de de') german = true;
+    if (value === 'ru' || value === 'ru ru') german = false;
+    syncStrawberry();
+  });
+
+  syncStrawberry();
+})();
 </script>
 
 </body></html>
