@@ -433,6 +433,24 @@ document.addEventListener('change', function(e) {
   img.alt = select.options[select.selectedIndex].text;
   img.style.display = 'block';
 });
+function showInitialPhoto() {
+  const select = document.querySelector(
+    '#review-form select[name="drink"]'
+  );
+  if (select && !select.closest('form').querySelector('.selected-drink-photo')) {
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+}
+
+const reviewPanel = document.getElementById('panel');
+if (reviewPanel) {
+  new MutationObserver(showInitialPhoto).observe(reviewPanel, {
+    childList: true,
+    subtree: true
+  });
+}
+showInitialPhoto();
+
 </script>
 
 </body></html>
