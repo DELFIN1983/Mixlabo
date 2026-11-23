@@ -310,7 +310,7 @@ showInitialPhoto();
 .ml-ad-image{width:100%;height:auto;display:block}
 .ml-image-hotspot{position:absolute;top:80.5%;height:12%;border:0;cursor:pointer;background:transparent;border-radius:20px;z-index:5}
 .ml-image-hotspot:hover,.ml-image-hotspot:focus-visible{outline:3px solid #91edff;box-shadow:0 0 24px #f65deaaa}
-.ml-ad-switch{display:flex;justify-content:flex-end;gap:8px;padding:5px 12px}.ml-ad-switch button{background:#17051f;color:#fff;border:1px solid #ef6be3;border-radius:18px;padding:5px 10px;cursor:pointer}.is-de .ml-actual-actions{display:grid}.is-de .ml-image-hotspot{display:none}
+.ml-ad-switch{display:flex;justify-content:flex-end;gap:8px;padding:5px 12px}.ml-ad-switch button{background:#17051f;color:#fff;border:1px solid #ef6be3;border-radius:18px;padding:5px 10px;cursor:pointer}
 .ml-actual-actions{display:none;grid-template-columns:repeat(5,1fr);gap:8px;padding:15px 6%}
 .ml-actual-actions button{color:white;background:#170a25;border:2px solid #ef57db;border-radius:17px;min-height:55px;padding:8px;font-size:14px;box-shadow:0 0 11px #ec45c0aa}
 .ml-actual-actions button:nth-child(2){border-color:#4ce7ff}.ml-actual-actions button:nth-child(3){border-color:#ffe44f}.ml-actual-actions button:nth-child(4){border-color:#78fa71}.ml-actual-actions button:nth-child(5){border-color:#b18aff}
@@ -361,10 +361,9 @@ showInitialPhoto();
   function actionButtons(){const t=tr[lang];return `<div class="ml-actual-actions">${topics.map((topic,i)=>`<button type="button" data-ads-topic="${topic}">${symbols[i]} ${t[topic]}</button>`).join('')}</div>`}
   function adMarkup(){const t=tr[lang];return `<section class="ml-ad-page ${lang==='de'?'is-de':''}" aria-label="${t.head}">
      <div class="ml-ad-switch"><button type="button" data-ads-lang="ru">RU</button><button type="button" data-ads-lang="de">DE</button></div>
-     <div class="ml-ad-image-wrap"><img src="MixLabo_Advertising_Page.jpg" class="ml-ad-image" alt="MixLabo — ${t.head}; три разноцветных коктейля и пять вариантов обращения">
+     <div class="ml-ad-image-wrap"><img src="${lang==='de'?'MixLabo_Advertising_Page_DE.jpg':'MixLabo_Advertising_Page.jpg'}" class="ml-ad-image" alt="MixLabo — ${t.head}; три разноцветных коктейля и пять вариантов обращения">
        ${topics.map((topic,i)=>`<button type="button" class="ml-image-hotspot" data-ads-topic="${topic}" style="left:${3+i*19.2}%;width:18.8%" aria-label="${t[topic]}"></button>`).join('')}
      </div>
-     ${lang==='de'?`<div class="ml-de-ad-heading">${t.head}</div>`:''}
      ${actionButtons()}
      <p class="ml-ad-hint">${t.note}</p>
      <div id="ml-ad-request" aria-live="polite"></div>
