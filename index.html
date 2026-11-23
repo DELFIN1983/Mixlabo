@@ -23,6 +23,22 @@
  body{display:flex;justify-content:center;align-items:center;}
  .stage{top:auto;transform:none;flex:none;width:min(100vw,150vh);height:min(100vh,66.666667vw);}
 }
+
+/* MixLabo video gallery: one navigation, one content area, no floating sections. */
+.ml-video-gallery{clear:both;width:100%;padding-bottom:24px}
+.ml-video-gallery h1{margin:6px 0 20px}
+.ml-video-gallery h2{font-size:clamp(20px,2.4vw,29px);margin:7px 0;color:#ffa5e7}
+.ml-video-gallery p{color:#d4d6eb;margin:7px 0 15px}
+.ml-video-gallery video{display:block;width:100%;background:#04030a;border-radius:14px;box-shadow:0 0 16px #8a47dc55}
+.ml-video-feature{border:1px solid #eb71db;border-radius:20px;text-align:center;background:linear-gradient(145deg,#260e38,#0c132d);padding:22px 16px 26px;box-shadow:0 0 22px #d447d844;margin:0 0 24px}
+.ml-video-feature video{max-width:330px;max-height:65vh;aspect-ratio:9/16;object-fit:contain;margin:0 auto}
+.ml-feature-tag{font-weight:bold;color:#8fedff;letter-spacing:.03em}
+.ml-video-next{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.ml-video-item{min-width:0;background:#101122;border:1px solid #3a9cc2;border-radius:17px;padding:15px}
+.ml-video-item video{max-width:420px;margin:0 auto;aspect-ratio:9/16;object-fit:contain;max-height:370px}
+.ml-video-item details{margin-top:14px;color:#e1e9ff}
+.ml-video-item summary{cursor:pointer;color:#70eaff;padding:8px}
+@media(max-width:700px){.ml-video-next{grid-template-columns:1fr}.ml-video-feature{padding:18px 10px}.ml-video-feature video{max-height:none}.ml-video-item{padding:13px}}
 </style></head><body><main class="stage" id="stage"><img class="design" src="design.jpg" alt="MixLabo — утверждённая главная страница"><div id="german-home" aria-hidden="true"></div><div id="hotspots"></div><button class="review-entry" id="review-entry" type="button">Отзывы</button><section class="panel" id="panel" aria-live="polite"></section></main><script>
 const ru={home:'Главная',recipes:'Рецепты',videos:'Видео',ideas:'Идеи',partners:'Партнёры',title:'Популярные рецепты',soon:'Наши видео: сначала MixLabo Fantasy, затем ролики с рецептами коктейлей.',idea:'Скоро здесь будут новые идеи и сочетания вкусов.',partner:'Здесь появится информация для сотрудничества.',ingredients:'Ингредиенты',method:'Приготовление',back:'Назад к рецептам',reviews:'Отзывы',reviewRecipe:'О рецептах',reviewSite:'О сайте',reviewName:'Имя (необязательно)',reviewText:'Ваш комментарий',reviewRating:'Оценка',reviewChoose:'Выберите рецепт',reviewSend:'Опубликовать',reviewEmpty:'Пока нет комментариев.',reviewSaved:'Отзыв отправлен и появится после проверки.',reviewNote:'Отзывы доступны всем посетителям после одобрения модератором.',reviewRequired:'Напишите комментарий.',reviewLimit:'Максимум 500 символов.'};
 const de={home:'Startseite',recipes:'Rezepte',videos:'Videos',ideas:'Ideen',partners:'Partner',title:'Beliebte Rezepte',soon:'Unsere Videos: zuerst MixLabo Fantasy, danach Cocktail-Videos und Rezepte.',idea:'Hier erscheinen neue Geschmacksideen.',partner:'Hier finden Sie künftig Informationen zur Zusammenarbeit.',ingredients:'Zutaten',method:'Zubereitung',back:'Zurück zu Rezepten',reviews:'Bewertungen',reviewRecipe:'Zu Rezepten',reviewSite:'Zur Website',reviewName:'Name (optional)',reviewText:'Ihr Kommentar',reviewRating:'Bewertung',reviewChoose:'Rezept auswählen',reviewSend:'Veröffentlichen',reviewEmpty:'Noch keine Kommentare.',reviewSaved:'Bewertung gesendet und wird nach Freigabe veröffentlicht.',reviewNote:'Bewertungen sind nach der Freigabe für alle Besucher sichtbar.',reviewRequired:'Bitte Kommentar eingeben.',reviewLimit:'Maximal 500 Zeichen.'};
@@ -45,7 +61,42 @@ const overlays=[
 ['Beliebte Rezepte',3.4,70.5,37,4,'pop'],['Alle Rezepte ansehen →',77,70.5,21,4,'all'],
 ['Erdbeer-Smoothie',3.4,90.8,15.1,5.3,'drink'],['Mango-Mojito',19.5,91.5,15.1,3.6,'drink'],['Tequila Sunrise',35.55,91.5,15.1,3.6,'drink'],['Blaue Lagune',51.6,91.5,15.1,3.6,'drink'],['Waldbeeren',67.65,91.5,15.1,3.6,'drink'],['Detox-Mix',83.7,91.5,13.4,3.6,'drink']];
 ghome.innerHTML=overlays.map(([label,x,y,w,h,cls])=>`<div class="tr ${cls}" style="left:${x}%;top:${y}%;width:${w}%;height:${h}%">${label}</div>`).join('');
-function show(v){view=v;render()}function render(){ghome.classList.toggle('active',lang==='de'&&view==='home');const p=document.getElementById('panel'),t=lang==='ru'?ru:de;if(view==='home'){p.classList.remove('active');p.innerHTML='';document.getElementById('review-entry').style.display='block';document.getElementById('review-entry').textContent=t.reviews;return}document.getElementById('review-entry').style.display='none';p.classList.add('active');const nav=`<div class="bar"><div class="brand">MixLabo</div><div class="nav">${['home','recipes','videos','ideas','partners','reviews'].map(k=>`<button data-go="${k}">${t[k]}</button>`).join('')}<button data-lang="ru">🇷🇺 RU</button><button data-lang="de">🇩🇪 DE</button></div></div>`;let body='';if(view==='reviews'){body=reviewMarkup(t)}else if(view==='recipes'){body=`<h1>${t.title}</h1><div class="cards">${items.map((r,i)=>`<button class="card" data-go="item${i}"><img src="${r.img}" alt=""><strong>${r[lang]}</strong></button>`).join('')}</div>`}else if(view.startsWith('item')){let r=items[Number(view.slice(4))];body=`<div class="recipe"><img src="${r.img}" alt=""><h1>${r[lang]}</h1><h2>${t.ingredients}</h2><p>${r[lang+'I']}</p><h2>${t.method}</h2><p>${lang==='ru'?'Подготовьте ингредиенты, смешайте в блендере или стакане, подавайте охлаждённым.':'Zutaten vorbereiten, im Mixer oder Glas vermischen und gekühlt servieren.'}</p><button class="back" data-go="recipes">${t.back}</button></div>`}else{let msg=view==='videos'?t.soon:view==='ideas'?t.idea:t.partner;body=`<h1>${t[view]}</h1><p class="muted">${msg}</p>`}p.innerHTML=nav+body;p.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go));p.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{lang=b.dataset.lang;render()});if(view==='reviews')wireReviews(t)}
+function videoMarkup(){
+ const german=lang==='de';
+ const heading=german?'Unsere Videos':'Наши видео';
+ const featureLabel=german?'Unser Fantasy-Highlight':'Главная премьера MixLabo';
+ const featureInfo=german?'Magischer Cocktail · MixLabo Fantasy':'Волшебный коктейль · MixLabo Fantasy';
+ const tropicalInfo=german?'Fruchtiger Cocktail · Rezept zum Nachmachen':'Фруктовый коктейль · Рецепт приготовления';
+ const berryInfo=german?'Cremiger Erdbeer-Milchshake · Rezept':'Клубничный милкшейк · Рецепт приготовления';
+ const trRu='Манговый сок — 100 мл; ананасовый сок — 60 мл; сироп Blue Curaçao без алкоголя — 15 мл; гренадин — 15 мл; лимонный сок — 10 мл; лёд и фрукты. Налейте сироп, затем соки, добавьте Blue Curaçao и украсьте.';
+ const trDe='100 ml Mangosaft, 60 ml Ananassaft, 15 ml alkoholfreier Blue-Curaçao-Sirup, 15 ml Grenadine, 10 ml Zitronensaft, Eis und Obst. Sirup und Säfte eingießen, Blue Curaçao zugeben und garnieren.';
+ const stRu='Клубника — 120 г; молоко — 150 мл; ванильное мороженое — 80 г; лёд — 3 кубика. Взбейте клубнику, молоко и мороженое; перелейте в бокал и украсьте.';
+ const stDe='120 g Erdbeeren, 150 ml Milch, 80 g Vanilleeis, 3 Eiswürfel. Alles im Mixer pürieren, ins Glas gießen und garnieren.';
+ return `<div class="ml-video-gallery">
+  <h1>${heading}</h1>
+  <section class="ml-video-feature" aria-label="MixLabo Fantasy">
+    <div class="ml-feature-tag">✨ ${featureLabel}</div>
+    <h2>MixLabo Fantasy</h2><p>${featureInfo}</p>
+    <video controls playsinline preload="metadata" poster="MixLabo_Fantasy_Poster.jpg" aria-label="MixLabo Fantasy">
+      <source src="MixLabo_Fantasy_Reel.mp4" type="video/mp4">
+    </video>
+  </section>
+  <div class="ml-video-next">
+   <section class="ml-video-item"><h2>🍹 Tropical Mirage</h2><p>${tropicalInfo}</p>
+     <video controls playsinline preload="metadata" poster="MixLabo_Tropical_Poster.jpg" aria-label="Tropical Mirage">
+       <source src="MixLabo_Tropical_Mirage_20s_with_original_sound.mp4" type="video/mp4">
+     </video><details><summary>${german?'Rezept anzeigen':'Показать рецепт'}</summary><p>${german?trDe:trRu}</p></details>
+   </section>
+   <section class="ml-video-item"><h2>🍓 ${german?'Erdbeer-Milchshake':'Клубничный милкшейк'}</h2><p>${berryInfo}</p>
+     <video controls playsinline preload="metadata" poster="MixLabo_Strawberry_Poster.jpg" aria-label="Strawberry Milkshake">
+       <source src="MixLabo_Strawberry_Milkshake.mp4" type="video/mp4">
+     </video><details><summary>${german?'Rezept anzeigen':'Показать рецепт'}</summary><p>${german?stDe:stRu}</p></details>
+   </section>
+  </div>
+ </div>`;
+}
+function stopVideoPlayers(){document.querySelectorAll('#panel video').forEach(v=>v.pause())}
+function show(v){stopVideoPlayers();view=v;render()}function render(){ghome.classList.toggle('active',lang==='de'&&view==='home');const p=document.getElementById('panel'),t=lang==='ru'?ru:de;if(view==='home'){p.classList.remove('active');p.innerHTML='';document.getElementById('review-entry').style.display='block';document.getElementById('review-entry').textContent=t.reviews;return}document.getElementById('review-entry').style.display='none';p.classList.add('active');const nav=`<div class="bar"><div class="brand">MixLabo</div><div class="nav">${['home','recipes','videos','ideas','partners','reviews'].map(k=>`<button data-go="${k}">${t[k]}</button>`).join('')}<button data-lang="ru">🇷🇺 RU</button><button data-lang="de">🇩🇪 DE</button></div></div>`;let body='';if(view==='reviews'){body=reviewMarkup(t)}else if(view==='recipes'){body=`<h1>${t.title}</h1><div class="cards">${items.map((r,i)=>`<button class="card" data-go="item${i}"><img src="${r.img}" alt=""><strong>${r[lang]}</strong></button>`).join('')}</div>`}else if(view.startsWith('item')){let r=items[Number(view.slice(4))];body=`<div class="recipe"><img src="${r.img}" alt=""><h1>${r[lang]}</h1><h2>${t.ingredients}</h2><p>${r[lang+'I']}</p><h2>${t.method}</h2><p>${lang==='ru'?'Подготовьте ингредиенты, смешайте в блендере или стакане, подавайте охлаждённым.':'Zutaten vorbereiten, im Mixer oder Glas vermischen und gekühlt servieren.'}</p><button class="back" data-go="recipes">${t.back}</button></div>`}else if(view==='videos'){body=videoMarkup()}else{let msg=view==='ideas'?t.idea:t.partner;body=`<h1>${t[view]}</h1><p class="muted">${msg}</p>`}p.innerHTML=nav+body;p.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go));p.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{lang=b.dataset.lang;render()});if(view==='reviews')wireReviews(t)}
 
 // Public Supabase REST API. Insert only unapproved reviews; display approved ones.
 // Fill in ONLY your project's public URL and sb_publishable_ key. NEVER use sb_secret_ or service_role.
@@ -106,6 +157,7 @@ function wireReviews(t){
   };
   drawReviews(t)
 }
+document.getElementById('panel').addEventListener('play',e=>{if(e.target.tagName==='VIDEO')document.querySelectorAll('#panel video').forEach(v=>{if(v!==e.target)v.pause()})},true);
 document.getElementById('review-entry').onclick=()=>show('reviews');
 render();
 </script><script>
@@ -197,251 +249,6 @@ render();
 
 </script>
 
-<section id="mixlabo-video" style="position:relative;z-index:20;background:#101020;color:white;text-align:center;padding:30px 15px;">
-  <h2>Tropical Mirage 🍹</h2>
-  <video controls poster="MixLabo_Tropical_Poster.jpg" playsinline preload="metadata" style="width:100%;max-width:360px;border-radius:16px;">
-    <source src="MixLabo_Tropical_Mirage_20s_with_original_sound.mp4" type="video/mp4">
-  </video>
-</section>
- 
-<div id="tropical-recipe" style="max-width:420px;margin:20px auto;padding:18px;background:#1b1830;color:white;border-radius:16px;text-align:left;">
-  <h3>🍹 Tropical Mirage</h3>
-  <div id="recipe-ru">
-    <h4>Ингредиенты (1 порция)</h4>
-    <p>Манговый сок — 100 мл<br>Ананасовый сок — 60 мл<br>Сироп Blue Curacao (без алкоголя) — 15 мл<br>Гренадин — 15 мл<br>Лимонный сок — 10 мл<br>Лед, манго, малина и съедобные цветы.</p>
-    <h4>Приготовление</h4>
-    <p>Положите лед в бокал. Добавьте гренадин. Медленно влейте смесь соков с лимонным соком, затем разбавленный сироп Blue Curacao. Украсьте фруктами и цветами.</p>
-  </div>
-  <div id="recipe-de">
-    <h4>Zutaten (1 Portion)</h4>
-    <p>100 ml Mangosaft, 60 ml Ananassaft, 15 ml alkoholfreier Blue-Curaçao-Sirup, 15 ml Grenadine, 10 ml Zitronensaft, Eis, Mango, Himbeeren und essbare Blüten.</p>
-    <h4>Zubereitung</h4>
-    <p>Eis ins Glas geben. Grenadine hinzufügen. Die Säfte langsam eingießen und danach den verdünnten Blue-Curaçao-Sirup zugeben. Mit Früchten und Blüten garnieren.</p>
-  </div>
-</div>
-
- 
-<section id="strawberry-milkshake" style="display:none;width:100%;clear:both;margin:30px auto;">
-  <div style="display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-start;gap:24px;">
-
-    <div style="width:360px;max-width:100%;text-align:center;color:white;">
-      <h2>🍓 Strawberry Milkshake</h2>
-      <video controls poster="MixLabo_Strawberry_Poster.jpg" playsinline preload="metadata" style="width:100%;border-radius:16px;">
-        <source src="MixLabo_Strawberry_Milkshake.mp4" type="video/mp4">
-      </video>
-    </div>
-
-    <div style="width:320px;max-width:100%;padding:18px;background:#1b1830;color:white;border-radius:16px;box-sizing:border-box;">
-
-      <div id="strawberry-ru">
-        <h3>🍓 Клубничный милкшейк</h3>
-        <h4>Ингредиенты (1 порция)</h4>
-        <p>Клубника — 120 г<br>Молоко — 150 мл<br>Ванильное мороженое — 80 г<br>Лёд — 3 кубика<br>Взбитые сливки и клубника — для украшения</p>
-        <h4>Приготовление</h4>
-        <p>1. Вымойте клубнику и удалите чашелистики.</p>
-        <p>2. Взбейте клубнику, молоко и ванильное мороженое в блендере до однородности.</p>
-        <p>3. Положите лёд в высокий бокал Hurricane.</p>
-        <p>4. Перелейте коктейль в бокал, украсьте взбитыми сливками и свежей клубникой.</p>
-      </div>
-
-      <div id="strawberry-de" style="display:none;">
-        <h3>🍓 Erdbeer-Milchshake</h3>
-        <h4>Zutaten (1 Portion)</h4>
-        <p>Erdbeeren — 120 g<br>Milch — 150 ml<br>Vanilleeis — 80 g<br>Eiswürfel — 3 Stück<br>Schlagsahne und Erdbeeren zum Garnieren</p>
-        <h4>Zubereitung</h4>
-        <p>1. Erdbeeren waschen und die Kelchblätter entfernen.</p>
-        <p>2. Erdbeeren, Milch und Vanilleeis im Mixer cremig pürieren.</p>
-        <p>3. Drei Eiswürfel in ein hohes Hurricane-Glas geben.</p>
-        <p>4. Den Milchshake ins Glas gießen und mit Schlagsahne und frischen Erdbeeren garnieren.</p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
- 
-
-<script>
-(function () {
-  const video = document.getElementById('mixlabo-video');
-  const recipe = document.getElementById('tropical-recipe');
-  const ru = document.getElementById('recipe-ru');
-  const de = document.getElementById('recipe-de');
-
-  if (!video || !recipe || !ru || !de) return;
-
-  video.style.display = 'none';
-  recipe.style.display = 'none';
-
-  let german = false;
-
-  function setLanguage() {
-    ru.style.display = german ? 'none' : 'block';
-    de.style.display = german ? 'block' : 'none';
-  }
-
-  setLanguage();
-
-  document.addEventListener('click', function (event) {
-    const button = event.target.closest(
-      'button, .hot, [data-go], [data-ml-go]'
-    );
-
-    if (!button) return;
-
-    const destination =
-      button.getAttribute('data-go') ||
-      button.getAttribute('data-ml-go') || '';
-
-    const label = button.textContent.trim().toLowerCase();
-
-    const isVideos =
-      destination === 'videos' ||
-      label === 'видео' ||
-      label === 'videos';
-
-    const navigation = [
-      'home', 'recipes', 'videos', 'ideas', 'partners'
-    ];
-
-    const isNavigation =
-      navigation.includes(destination) ||
-      ['главная', 'рецепты', 'видео', 'идеи',
-       'партнёры', 'startseite', 'rezepte',
-       'videos', 'ideen', 'partner'].includes(label);
-
-    if (isNavigation) {
-      video.style.display = isVideos ? 'block' : 'none';
-      recipe.style.display = isVideos ? 'block' : 'none';
-      if (!isVideos) {
-        const player = video.querySelector('video');
-        if (player) player.pause();
-      }
-    }
-
-    if (button.matches('[data-ml-lang], [data-lang]') ||
-        label === 'ru' || label === 'de') {
-      const language =
-        button.getAttribute('data-ml-lang') ||
-        button.getAttribute('data-lang') || label;
-      german = language === 'de';
-      setLanguage();
-    }
-  });
-})();
-</script>
-
-<script>
-(() => {
-  const panel = document.getElementById('panel');
-  const video = document.getElementById('mixlabo-video');
-  const recipe = document.getElementById('tropical-recipe');
-
-  if (!panel || !video || !recipe) return;
-
-  function update() {
-    const active = typeof view !== 'undefined'
-      && view === 'videos';
-
-    if (active) {
-      if (video.parentElement !== panel) {
-        panel.append(video, recipe);
-      }
-      video.style.display = 'block';
-      recipe.style.display = 'block';
-    }
-  }
-
-  new MutationObserver(update).observe(panel, {
-    childList: true
-  });
-
-  update();
-})();
-</script>
-
- <script>
-(() => {
-  const panel = document.getElementById('panel');
-  const video = document.getElementById('mixlabo-video');
-  const recipe = document.getElementById('tropical-recipe');
-
-  if (!panel || !video || !recipe) return;
-
-  function placeRecipeSideBySide() {
-    const isVideosPage = typeof view !== 'undefined' && view === 'videos';
-
-   if (!isVideosPage) {
-  panel.style.removeProperty('display');
-  panel.style.removeProperty('flex-direction');
-  return;
-}
-
-    panel.style.display = 'block';
-    panel.style.flexDirection = window.innerWidth < 900 ? 'column' : 'row';
-    panel.style.justifyContent = 'center';
-    panel.style.alignItems = 'flex-start';
-    panel.style.gap = '24px';
-    panel.style.flexWrap = 'wrap';
-
-    video.style.display = 'block';
-    recipe.style.display = 'block';
-
-    video.style.margin = '0';
-    recipe.style.margin = '0';
-
-    video.style.flex = '0 0 360px';
-    video.style.maxWidth = '360px';
-
-    recipe.style.flex = '0 0 320px';
-    recipe.style.maxWidth = '320px';
-  }
-
-  const oldShow = typeof show === 'function' ? show : null;
-  if (oldShow) {
-    show = function(v) {
-      oldShow(v);
-      placeRecipeSideBySide();
-    };
-  }
-
-  const oldRender = typeof render === 'function' ? render : null;
-  if (oldRender) {
-    render = function() {
-      oldRender();
-      placeRecipeSideBySide();
-    };
-  }
-
-  window.addEventListener('resize', placeRecipeSideBySide);
-  placeRecipeSideBySide();
-})();
-</script>
-
-<style>
-
-#panel #mixlabo-video {
-  float: left !important;
-  width: 48% !important;
-  max-width: none !important;
-  margin: 0 2% 0 0 !important;
-}
-#panel #tropical-recipe {
-  float: left !important;
-  width: 48% !important;
-  max-width: none !important;
-  margin: 0 !important;
-}
-@media (max-width: 700px) {
-  #panel #mixlabo-video,
-  #panel #tropical-recipe {
-    float: none !important;
-    width: 100% !important;
-    margin: 12px 0 !important;
-  }
-}
-</style>
- 
 <script>
 document.addEventListener('change', function(e) {
   if (!e.target.matches('select[name="drink"]')) return;
@@ -493,124 +300,9 @@ showInitialPhoto();
 
 </script>
 
-<script>
-(() => {
-  const strawberry = document.getElementById('strawberry-milkshake');
-  const panel = document.getElementById('panel');
-  if (!strawberry || !panel) return;
-
-  const marker = document.createComment('strawberry-home');
-  strawberry.before(marker);
-
-  let german = typeof lang !== 'undefined' && lang === 'de';
-
-  function syncStrawberry() {
-    const videos = typeof view !== 'undefined' && view === 'videos';
-
-    if (videos) {
-      panel.appendChild(strawberry);
-      strawberry.style.display = 'block';
-    } else {
-      marker.after(strawberry);
-      strawberry.style.display = 'none';
-      strawberry.querySelector('video')?.pause();
-    }
-
-    document.getElementById('strawberry-ru').style.display =
-      german ? 'none' : 'block';
-    document.getElementById('strawberry-de').style.display =
-      german ? 'block' : 'none';
-  }
-
-  function parkStrawberry() {
-    marker.after(strawberry);
-    strawberry.style.display = 'none';
-  }
-
-  const oldShow = show;
-  show = function(v) {
-    parkStrawberry();
-    oldShow(v);
-    syncStrawberry();
-  };
-
-  const oldRender = render;
-  render = function() {
-    parkStrawberry();
-    oldRender();
-    syncStrawberry();
-  };
-
-  document.addEventListener('click', (e) => {
-    const button = e.target.closest('button');
-    if (!button) return;
-    const value = button.getAttribute('data-ml-lang') ||
-                  button.getAttribute('data-lang') ||
-                  button.textContent.trim().toLowerCase();
-    if (value === 'de' || value === 'de de') german = true;
-    if (value === 'ru' || value === 'ru ru') german = false;
-    syncStrawberry();
-  });
-
-  syncStrawberry();
-})();
-</script>
 
 
-<!-- Featured MixLabo Fantasy: first in videos, followed by existing cocktail clips. -->
-<style>
-  #mixlabo-fantasy-feature {clear:both;width:100%;margin:8px 0 24px;padding:18px 12px 24px;
-      text-align:center;color:white;border:1px solid #ec59d9;border-radius:18px;
-      background:linear-gradient(145deg,#220b30,#0b1027);box-shadow:0 0 20px #d44fc13d;}
-  #mixlabo-fantasy-feature h2 {color:#ff92e6;text-shadow:0 0 9px #e629b0;font-size:clamp(22px,3vw,34px);margin:4px 0 6px;}
-  #mixlabo-fantasy-feature p {color:#d6d4ec;margin:0 0 13px;}
-  #mixlabo-fantasy-feature video {display:block;width:min(100%,360px);max-height:58vh;
-      aspect-ratio:9/16;object-fit:contain;background:#020309;border-radius:14px;
-      margin:0 auto;box-shadow:0 0 18px #bc4bdb55;}
-  #panel #mixlabo-fantasy-feature {box-sizing:border-box;}
-  @media(max-width:700px){#mixlabo-fantasy-feature {padding:16px 9px 20px;margin:12px 0 20px}
-     #mixlabo-fantasy-feature video{max-height:none;}}
-</style>
-<section id="mixlabo-fantasy-feature" hidden aria-label="MixLabo Fantasy">
-  <h2>✨ MixLabo Fantasy</h2>
-  <p id="fantasy-intro">Волшебный коктейль · Премьера MixLabo</p>
-  <video id="fantasy-player" controls playsinline preload="metadata" poster="MixLabo_Fantasy_Poster.jpg">
-    <source src="MixLabo_Fantasy_Reel.mp4" type="video/mp4">
-  </video>
-</section>
-<script>
-(() => {
-  const panel = document.getElementById('panel');
-  const fantasy = document.getElementById('mixlabo-fantasy-feature');
-  const fantasyPlayer = document.getElementById('fantasy-player');
-  if (!panel || !fantasy || !fantasyPlayer) return;
-  function updateFantasy(){
-    const isVideos = typeof view !== 'undefined' && view === 'videos';
-    if (!isVideos) {
-      fantasy.hidden = true;
-      fantasyPlayer.pause();
-      return;
-    }
-    fantasy.hidden = false;
-    document.getElementById('fantasy-intro').textContent = lang === 'de'
-      ? 'Magischer Cocktail · MixLabo-Premiere'
-      : 'Волшебный коктейль · Премьера MixLabo';
-    const tropical = document.getElementById('mixlabo-video');
-    if (tropical && tropical.parentElement === panel) panel.insertBefore(fantasy,tropical);
-    else panel.prepend(fantasy);
-  }
-  // Existing site integrations wrap show/render. Apply the feature after them.
-  const previousShow = show;
-  show = function(value){previousShow(value);updateFantasy()};
-  const previousRender = render;
-  render = function(){previousRender();updateFantasy()};
-  updateFantasy();
-  // Pause other clips if another video starts; no simultaneous audio.
-  panel.addEventListener('play', (e) => {
-    if (e.target.tagName !== 'VIDEO') return;
-    panel.querySelectorAll('video').forEach(v => {if (v !== e.target) v.pause()});
-  }, true);
-})();
-</script>
+
+
 
 </body></html>
