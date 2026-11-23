@@ -1,4 +1,5 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MixLabo — Лаборатория вкуса</title><style>
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>MixLabo — Лаборатория вкуса</title><style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;color:white;font-family:Arial,sans-serif}button{cursor:pointer;font:inherit}.stage{position:relative;width:min(100vw,150vh);height:min(100vh,66.66667vw);margin:auto;top:50%;transform:translateY(-50%);overflow:hidden;background:#030307}.design{display:block;width:100%;height:100%}.hot{position:absolute;border:0;background:transparent;color:transparent;z-index:3}#german-home{display:none;position:absolute;inset:0;pointer-events:none;z-index:2}#german-home.active{display:block}.tr{position:absolute;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;background:#06050b;line-height:1.12;font-weight:bold;white-space:nowrap}.tr.top{font-size:clamp(9px,1.55vw,23px);height:6%;top:6.2%;background:#030306}.tr.hero{justify-content:flex-start;font-size:clamp(16px,3.8vw,58px);font-style:italic;left:6.2%;width:29%;height:6%;background:#09060d}.tr.sub{font-size:clamp(8px,1.42vw,21px);font-weight:normal;white-space:normal;text-align:left;justify-content:flex-start;left:6.1%;width:29%;top:39%;height:6%;background:#09060d}.tr.cta{left:6%;top:49%;width:24%;height:4%;font-size:clamp(8px,1.45vw,22px);background:#250a24;border-radius:30px;box-shadow:0 0 8px #ff4be6}.tr.cat{top:61.5%;height:4.6%;font-size:clamp(9px,1.4vw,21px);background:#07040b}.tr.pop{left:3.4%;top:70.5%;height:4%;width:37%;justify-content:flex-start;font-size:clamp(12px,2.4vw,36px);font-style:italic;color:#c1c9ff;background:#030308}.tr.all{left:77%;top:70.5%;height:4%;width:21%;font-size:clamp(8px,1.35vw,20px);color:#67eaff;background:#030308}.tr.drink{font-size:clamp(7px,1.05vw,16px);background:#0b0711;border-radius:4px} .tr.pink{color:#ff7be5;text-shadow:0 0 7px #fa2cbd}.tr.green{color:#67ff67;text-shadow:0 0 7px #28f35c}.tr.yellow{color:#ffe37c;text-shadow:0 0 7px #ffb522} .lang-on{position:absolute;top:4%;left:91.4%;width:6.3%;height:6%;border:2px solid #ff67e8;border-radius:22px;box-shadow:0 0 9px #ff5bdf;pointer-events:none} .hot:focus-visible{outline:3px solid #00eaff;border-radius:10px}.panel{position:absolute;inset:0;background:radial-gradient(ellipse at 80% 10%,#241036 0%,#080811 50%,#000 100%);display:none;z-index:5;overflow:auto;padding:clamp(14px,3%,42px)}.panel.active{display:block}.bar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:3%;flex-wrap:wrap}.brand{font-size:clamp(24px,4vw,48px);font-weight:bold;font-style:italic;color:#ff5bc9;text-shadow:0 0 14px #f09}.nav{display:flex;gap:8px;flex-wrap:wrap}.nav button,.back,.chip{background:#080913;color:#fff;border:1px solid #f06ad8;border-radius:22px;padding:9px 13px;box-shadow:0 0 9px #e05ca855}.nav button:hover,.back:hover,.chip:hover{background:#45234e}h1{color:#6de7ff;text-shadow:0 0 14px #00dfff;font-size:clamp(23px,3vw,40px)}p{line-height:1.5}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2%;margin-top:20px}.card{min-width:0;background:#0c0d19;border:1px solid #18ddf7;border-radius:14px;overflow:hidden;color:#fff;text-align:left;padding:0 0 12px;box-shadow:0 0 12px #00d5ef44}.card img{width:100%;height:clamp(90px,18vh,200px);object-fit:contain;background:#05060b}.card strong{display:block;padding:7px 10px}.recipe{max-width:750px;margin:auto}.recipe img{width:min(220px,40%);float:right;margin:0 0 12px 18px;border-radius:12px}.muted{color:#b8c5d7}.back{margin-top:12px}@media(max-width:650px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.panel{padding:14px}.nav button{padding:7px 9px;font-size:12px}}
 
 /* German typography is fitted inside the same fixed 3:2 artwork as Russian. */
@@ -39,7 +40,7 @@
 .ml-video-item details{margin-top:14px;color:#e1e9ff}
 .ml-video-item summary{cursor:pointer;color:#70eaff;padding:8px}
 @media(max-width:700px){.ml-video-next{grid-template-columns:1fr}.ml-video-feature{padding:18px 10px}.ml-video-feature video{max-height:none}.ml-video-item{padding:13px}}
-</style></head><body><main class="stage" id="stage"><img class="design" src="design.jpg" alt="MixLabo — утверждённая главная страница"><div id="german-home" aria-hidden="true"></div><div id="hotspots"></div><button class="review-entry" id="review-entry" type="button">Отзывы</button><section class="panel" id="panel" aria-live="polite"></section></main><script>
+</style></head><body><main class="stage" id="stage"><img alt="MixLabo — утверждённая главная страница" class="design" src="design.jpg"/><div aria-hidden="true" id="german-home"></div><div id="hotspots"></div><button class="review-entry" id="review-entry" type="button">Отзывы</button><section aria-live="polite" class="panel" id="panel"></section></main><script>
 const ru={home:'Главная',recipes:'Рецепты',videos:'Видео',ideas:'Идеи',partners:'Партнёры',title:'Популярные рецепты',soon:'Наши видео: сначала MixLabo Fantasy, затем ролики с рецептами коктейлей.',idea:'Скоро здесь будут новые идеи и сочетания вкусов.',partner:'Здесь появится информация для сотрудничества.',ingredients:'Ингредиенты',method:'Приготовление',back:'Назад к рецептам',reviews:'Отзывы',reviewRecipe:'О рецептах',reviewSite:'О сайте',reviewName:'Имя (необязательно)',reviewText:'Ваш комментарий',reviewRating:'Оценка',reviewChoose:'Выберите рецепт',reviewSend:'Опубликовать',reviewEmpty:'Пока нет комментариев.',reviewSaved:'Отзыв отправлен и появится после проверки.',reviewNote:'Отзывы доступны всем посетителям после одобрения модератором.',reviewRequired:'Напишите комментарий.',reviewLimit:'Максимум 500 символов.'};
 const de={home:'Startseite',recipes:'Rezepte',videos:'Videos',ideas:'Ideen',partners:'Partner',title:'Beliebte Rezepte',soon:'Unsere Videos: zuerst MixLabo Fantasy, danach Cocktail-Videos und Rezepte.',idea:'Hier erscheinen neue Geschmacksideen.',partner:'Hier finden Sie künftig Informationen zur Zusammenarbeit.',ingredients:'Zutaten',method:'Zubereitung',back:'Zurück zu Rezepten',reviews:'Bewertungen',reviewRecipe:'Zu Rezepten',reviewSite:'Zur Website',reviewName:'Name (optional)',reviewText:'Ihr Kommentar',reviewRating:'Bewertung',reviewChoose:'Rezept auswählen',reviewSend:'Veröffentlichen',reviewEmpty:'Noch keine Kommentare.',reviewSaved:'Bewertung gesendet und wird nach Freigabe veröffentlicht.',reviewNote:'Bewertungen sind nach der Freigabe für alle Besucher sichtbar.',reviewRequired:'Bitte Kommentar eingeben.',reviewLimit:'Maximal 500 Zeichen.'};
 let lang='ru', view='home';const items=[
@@ -248,7 +249,6 @@ render();
 })();
 
 </script>
-
 <script>
 document.addEventListener('change', function(e) {
   if (!e.target.matches('select[name="drink"]')) return;
@@ -299,10 +299,101 @@ if (reviewPanel) {
 showInitialPhoto();
 
 </script>
-
-
-
-
-
-
+<!-- MixLabo: independent advertising slide; the original homepage artwork and features are retained. -->
+<style>
+.ml-slide-arrow{position:absolute;z-index:12;top:50%;transform:translateY(-50%);display:none;align-items:center;justify-content:center;width:45px;height:76px;border:2px solid #ff67eb;border-radius:25px;color:#76f3ff;background:#130521dd;box-shadow:0 0 15px #ff43df,0 0 12px #16cdff inset;font-size:36px;cursor:pointer}
+#ml-arrow-left{left:5px}#ml-arrow-right{right:5px}
+.ml-slide-arrow:focus-visible,.ml-slide-arrow:hover{outline:3px solid #a5faff}
+.panel:has(.ml-ad-page){padding:0;background:#030208;overflow:auto}
+.ml-ad-page{width:100%;min-height:100%;padding:0 0 30px;background:radial-gradient(circle at 50% 30%,#29113b,#05040b 75%);color:#fff}
+.ml-ad-image-wrap{position:relative;width:100%;max-width:100%;margin:auto;line-height:0}
+.ml-ad-image{width:100%;height:auto;display:block}
+.ml-image-hotspot{position:absolute;top:80.5%;height:12%;border:0;cursor:pointer;background:transparent;border-radius:20px;z-index:5}
+.ml-image-hotspot:hover,.ml-image-hotspot:focus-visible{outline:3px solid #91edff;box-shadow:0 0 24px #f65deaaa}
+.ml-ad-switch{display:flex;justify-content:flex-end;gap:8px;padding:5px 12px}.ml-ad-switch button{background:#17051f;color:#fff;border:1px solid #ef6be3;border-radius:18px;padding:5px 10px;cursor:pointer}.is-de .ml-actual-actions{display:grid}.is-de .ml-image-hotspot{display:none}
+.ml-actual-actions{display:none;grid-template-columns:repeat(5,1fr);gap:8px;padding:15px 6%}
+.ml-actual-actions button{color:white;background:#170a25;border:2px solid #ef57db;border-radius:17px;min-height:55px;padding:8px;font-size:14px;box-shadow:0 0 11px #ec45c0aa}
+.ml-actual-actions button:nth-child(2){border-color:#4ce7ff}.ml-actual-actions button:nth-child(3){border-color:#ffe44f}.ml-actual-actions button:nth-child(4){border-color:#78fa71}.ml-actual-actions button:nth-child(5){border-color:#b18aff}
+.ml-ad-hint{margin:8px auto 15px;text-align:center;font-size:13px;color:#dfcde5;padding:0 16px}
+.ml-ad-form{margin:14px auto 20px;max-width:750px;padding:18px;background:#100e22;border:2px solid #db5adb;border-radius:20px;box-shadow:0 0 20px #982d8677}
+.ml-ad-form h2{color:#78eaff;margin:0 0 17px;font-size:23px}
+.ml-ad-inputs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ml-ad-form label{display:flex;flex-direction:column;gap:7px;margin-bottom:10px}
+.ml-ad-form input,.ml-ad-form textarea{width:100%;padding:12px;background:#050715;color:white;border:1px solid #a969b8;border-radius:10px;font-size:15px}
+.ml-ad-form textarea{min-height:125px;resize:vertical}
+.ml-ad-form button,.ml-ad-back{background:linear-gradient(90deg,#9926a2,#0a6c9c);border:1px solid #f778de;border-radius:24px;padding:12px 16px;color:#fff;cursor:pointer}
+.ml-ad-foot{color:#c4bdd6;font-size:12px}.ml-ad-back{display:block;margin:16px auto}.ml-de-ad-heading{text-align:center;color:#8febff;text-shadow:0 0 10px #25c9ed;font-size:23px;padding:9px}
+#ml-copy-fallback:not([hidden]){display:block;width:100%;min-height:110px;margin-top:10px}
+@media(max-width:700px){
+ .ml-slide-arrow{position:fixed;top:44%;width:34px;height:60px;font-size:27px;z-index:25}
+ #ml-arrow-left{left:2px}#ml-arrow-right{right:2px}
+ .panel:has(.ml-ad-page){padding:0;overflow:auto}
+ .ml-ad-page{min-height:100dvh;padding-bottom:55px}
+ .ml-ad-image-wrap{overflow:hidden;height:clamp(250px,88vw,430px)}
+ .ml-ad-image{height:100%;width:100%;object-fit:cover;object-position:center center}
+ .ml-image-hotspot{display:none}
+ .ml-actual-actions{display:grid;grid-template-columns:1fr;gap:11px;padding:12px 12%}
+ .ml-actual-actions button{min-height:52px;font-size:15px}
+ .ml-ad-form{margin:12px 9%;padding:12px}
+ .ml-ad-inputs{grid-template-columns:1fr}
+ .ml-ad-hint{font-size:12px;padding:0 8%}
+}
+</style>
+<script>
+(() => {
+  const stage=document.getElementById('stage');
+  const panel=document.getElementById('panel');
+  const left=document.createElement('button'),right=document.createElement('button');
+  left.type=right.type='button';left.id='ml-arrow-left';right.id='ml-arrow-right';
+  left.className=right.className='ml-slide-arrow';left.textContent='❮';right.textContent='❯';
+  left.setAttribute('aria-label','Вернуться на главную / Zur Startseite');
+  right.setAttribute('aria-label','Открыть рекламную страницу / Werbeseite öffnen');
+  stage.append(left,right);
+  left.addEventListener('click',()=>{show('home');window.scrollTo(0,0)});
+  right.addEventListener('click',()=>{show('advertise');window.scrollTo(0,0)});
+  const tr={
+    ru:{ad:'Разместить рекламу',offer:'Предложить сотрудничество',idea:'Предложить идею',recipe:'Предложить рецепт',contact:'Связаться с MixLabo',name:'Имя или компания',email:'Ваш e-mail',message:'Ваше сообщение',send:'Скопировать заявку',copyOk:'Заявка скопирована. Отправьте её выбранным вами способом: автоматическая отправка не подключена.',copyFallback:'Скопируйте текст заявки вручную.',note:'Это подготовка заявки; автоматическая отправка пока не подключена.',head:'Здесь может быть ваша реклама',form:'Обращение',back:'Вернуться на главную'},
+    de:{ad:'Werbung schalten',offer:'Zusammenarbeit vorschlagen',idea:'Idee vorschlagen',recipe:'Rezept vorschlagen',contact:'MixLabo kontaktieren',name:'Name oder Firma',email:'Ihre E-Mail-Adresse',message:'Ihre Nachricht',send:'Anfrage kopieren',copyOk:'Anfrage kopiert. Automatischer Versand ist noch nicht eingerichtet.',copyFallback:'Bitte kopieren Sie die Anfrage manuell.',note:'Die Anfrage wird vorbereitet; automatischer Versand ist noch nicht eingerichtet.',head:'Hier könnte Ihre Werbung stehen',form:'Anfrage',back:'Zur Startseite'}
+  };
+  const topics=['ad','offer','idea','recipe','contact'];
+  const symbols=['📣','🤝','💡','🍸','✉'];
+  let chosen='ad';
+  function actionButtons(){const t=tr[lang];return `<div class="ml-actual-actions">${topics.map((topic,i)=>`<button type="button" data-ads-topic="${topic}">${symbols[i]} ${t[topic]}</button>`).join('')}</div>`}
+  function adMarkup(){const t=tr[lang];return `<section class="ml-ad-page ${lang==='de'?'is-de':''}" aria-label="${t.head}">
+     <div class="ml-ad-switch"><button type="button" data-ads-lang="ru">RU</button><button type="button" data-ads-lang="de">DE</button></div>
+     <div class="ml-ad-image-wrap"><img src="MixLabo_Advertising_Page.jpg" class="ml-ad-image" alt="MixLabo — ${t.head}; три разноцветных коктейля и пять вариантов обращения">
+       ${topics.map((topic,i)=>`<button type="button" class="ml-image-hotspot" data-ads-topic="${topic}" style="left:${3+i*19.2}%;width:18.8%" aria-label="${t[topic]}"></button>`).join('')}
+     </div>
+     ${lang==='de'?`<div class="ml-de-ad-heading">${t.head}</div>`:''}
+     ${actionButtons()}
+     <p class="ml-ad-hint">${t.note}</p>
+     <div id="ml-ad-request" aria-live="polite"></div>
+     <button type="button" class="ml-ad-back" data-ad-home>❮ ${t.back}</button>
+    </section>`}
+  function formMarkup(){const t=tr[lang];return `<form id="ml-ad-form" class="ml-ad-form"><h2>${t.form}: ${t[chosen]}</h2><div class="ml-ad-inputs"><label>${t.name}<input name="name" required maxlength="90" autocomplete="name"></label><label>${t.email}<input name="email" type="email" required maxlength="140" autocomplete="email"></label></div><label>${t.message}<textarea name="message" required maxlength="1500"></textarea></label><button type="submit">${t.send}</button><p class="ml-ad-foot">${t.note}</p><p role="status" id="ml-copy-feedback"></p><textarea id="ml-copy-fallback" readonly hidden></textarea></form>`}
+  function bindAd(){
+    panel.querySelectorAll('[data-ads-lang]').forEach(b=>b.addEventListener('click',()=>{lang=b.dataset.adsLang;render()}));
+    panel.querySelectorAll('[data-ads-topic]').forEach(b=>b.addEventListener('click',()=>{
+      chosen=b.dataset.adsTopic;const holder=document.getElementById('ml-ad-request');holder.innerHTML=formMarkup();
+      const form=document.getElementById('ml-ad-form');form.scrollIntoView({block:'start',behavior:'smooth'});
+      form.onsubmit=async e=>{e.preventDefault();const t=tr[lang],fd=new FormData(form);
+        const message=[`MixLabo — ${t[chosen]}`, `${t.name}: ${fd.get('name')}`,`${t.email}: ${fd.get('email')}`,`${t.message}: ${fd.get('message')}`].join('\n');
+        const feedback=document.getElementById('ml-copy-feedback'),fallback=document.getElementById('ml-copy-fallback');
+        try{await navigator.clipboard.writeText(message);feedback.textContent=t.copyOk;fallback.hidden=true}
+        catch(err){fallback.hidden=false;fallback.value=message;feedback.textContent=t.copyFallback;fallback.focus();fallback.select()}
+      };
+    }));
+    panel.querySelector('[data-ad-home]').addEventListener('click',()=>show('home'));
+  }
+  const oldRender=render;
+  render=function(){oldRender();if(view==='advertise'){
+    panel.classList.add('active');panel.innerHTML=adMarkup();
+    document.getElementById('review-entry').style.display='none';bindAd();
+  }
+  left.style.display=view==='advertise'?'flex':'none';
+  right.style.display=view==='home'?'flex':'none';
+  document.documentElement.lang=lang;
+  };
+  render();
+})();</script>
 </body></html>
