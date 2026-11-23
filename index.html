@@ -40,6 +40,8 @@
 .ml-video-item details{margin-top:14px;color:#e1e9ff}
 .ml-video-item summary{cursor:pointer;color:#70eaff;padding:8px}
 @media(max-width:700px){.ml-video-next{grid-template-columns:1fr}.ml-video-feature{padding:18px 10px}.ml-video-feature video{max-height:none}.ml-video-item{padding:13px}}
+
+.ml-honey{position:absolute!important;left:-10000px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important;opacity:0!important;pointer-events:none!important}
 </style></head><body><main class="stage" id="stage"><img alt="MixLabo — утверждённая главная страница" class="design" src="design.jpg"/><div aria-hidden="true" id="german-home"></div><div id="hotspots"></div><button class="review-entry" id="review-entry" type="button">Отзывы</button><section aria-live="polite" class="panel" id="panel"></section></main><script>
 const ru={home:'Главная',recipes:'Рецепты',videos:'Видео',ideas:'Идеи',partners:'Партнёры',title:'Популярные рецепты',soon:'Наши видео: сначала MixLabo Fantasy, затем ролики с рецептами коктейлей.',idea:'Скоро здесь будут новые идеи и сочетания вкусов.',partner:'Здесь появится информация для сотрудничества.',ingredients:'Ингредиенты',method:'Приготовление',back:'Назад к рецептам',reviews:'Отзывы',reviewRecipe:'О рецептах',reviewSite:'О сайте',reviewName:'Имя (необязательно)',reviewText:'Ваш комментарий',reviewRating:'Оценка',reviewChoose:'Выберите рецепт',reviewSend:'Опубликовать',reviewEmpty:'Пока нет комментариев.',reviewSaved:'Отзыв отправлен и появится после проверки.',reviewNote:'Отзывы доступны всем посетителям после одобрения модератором.',reviewRequired:'Напишите комментарий.',reviewLimit:'Максимум 500 символов.'};
 const de={home:'Startseite',recipes:'Rezepte',videos:'Videos',ideas:'Ideen',partners:'Partner',title:'Beliebte Rezepte',soon:'Unsere Videos: zuerst MixLabo Fantasy, danach Cocktail-Videos und Rezepte.',idea:'Hier erscheinen neue Geschmacksideen.',partner:'Hier finden Sie künftig Informationen zur Zusammenarbeit.',ingredients:'Zutaten',method:'Zubereitung',back:'Zurück zu Rezepten',reviews:'Bewertungen',reviewRecipe:'Zu Rezepten',reviewSite:'Zur Website',reviewName:'Name (optional)',reviewText:'Ihr Kommentar',reviewRating:'Bewertung',reviewChoose:'Rezept auswählen',reviewSend:'Veröffentlichen',reviewEmpty:'Noch keine Kommentare.',reviewSaved:'Bewertung gesendet und wird nach Freigabe veröffentlicht.',reviewNote:'Bewertungen sind nach der Freigabe für alle Besucher sichtbar.',reviewRequired:'Bitte Kommentar eingeben.',reviewLimit:'Maximal 500 Zeichen.'};
@@ -369,16 +371,27 @@ showInitialPhoto();
      <div id="ml-ad-request" aria-live="polite"></div>
      <button type="button" class="ml-ad-back" data-ad-home>❮ ${t.back}</button>
     </section>`}
-  function formMarkup(){const t=tr[lang];return `<form id="ml-ad-form" class="ml-ad-form"><h2>${t.form}: ${t[chosen]}</h2><div class="ml-ad-inputs"><label>${t.name}<input name="name" required maxlength="90" autocomplete="name"></label><label>${t.email}<input name="email" type="email" required maxlength="140" autocomplete="email"></label></div><label>${t.message}<textarea name="message" required maxlength="1500"></textarea></label><button type="submit">${t.send}</button><p class="ml-ad-foot">${t.note}</p><p role="status" id="ml-copy-feedback"></p><textarea id="ml-copy-fallback" readonly hidden></textarea></form>`}
+  // Extra anti-bot field is visually hidden; it is sent to Formspree as _gotcha.
+  function formMarkup(){const t=tr[lang];return `<form id="ml-ad-form" class="ml-ad-form"><h2>${t.form}: ${t[chosen]}</h2><div class="ml-ad-inputs"><label>${t.name}<input name="name" required maxlength="90" autocomplete="name"></label><label>${t.email}<input name="email" type="email" required maxlength="140" autocomplete="email" inputmode="email"></label></div><div class="ml-honey" aria-hidden="true"><label>Leave this empty<input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></label></div><label>${t.message}<textarea name="message" required maxlength="1500"></textarea></label><button type="submit">${t.send}</button><p class="ml-ad-foot">${t.note}</p><p role="status" id="ml-copy-feedback"></p><textarea id="ml-copy-fallback" readonly hidden></textarea></form>`}
   function bindAd(){
     panel.querySelectorAll('[data-ads-lang]').forEach(b=>b.addEventListener('click',()=>{lang=b.dataset.adsLang;render()}));
     panel.querySelectorAll('[data-ads-topic]').forEach(b=>b.addEventListener('click',()=>{
       chosen=b.dataset.adsTopic;const holder=document.getElementById('ml-ad-request');holder.innerHTML=formMarkup();
       const form=document.getElementById('ml-ad-form');form.scrollIntoView({block:'start',behavior:'smooth'});
+      const emailField=form.elements.namedItem('email');
+      const checkEmail=()=>{
+        const value=emailField.value.trim();
+        const valid=!value || /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(value);
+        emailField.setCustomValidity(valid?'':lang==='ru'?'Укажите полный e-mail, например name@example.com':'Bitte eine vollständige E-Mail-Adresse eingeben, z. B. name@example.com');
+      };
+      emailField.addEventListener('input',checkEmail);
+      emailField.addEventListener('blur',checkEmail);
       form.onsubmit=async e=>{
         e.preventDefault();
+        checkEmail();
         if(!form.reportValidity())return;
         const t=tr[lang],fd=new FormData(form),button=form.querySelector('[type="submit"]');
+        if(String(fd.get('_gotcha')||'').trim())return;
         const feedback=document.getElementById('ml-copy-feedback');
         fd.append('topic',t[chosen]);
         fd.append('language',lang.toUpperCase());
