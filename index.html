@@ -352,8 +352,8 @@ showInitialPhoto();
   left.addEventListener('click',()=>{show('home');window.scrollTo(0,0)});
   right.addEventListener('click',()=>{show('advertise');window.scrollTo(0,0)});
   const tr={
-    ru:{ad:'Разместить рекламу',offer:'Предложить сотрудничество',idea:'Предложить идею',recipe:'Предложить рецепт',contact:'Связаться с MixLabo',name:'Имя или компания',email:'Ваш e-mail',message:'Ваше сообщение',send:'Скопировать заявку',copyOk:'Заявка скопирована. Отправьте её выбранным вами способом: автоматическая отправка не подключена.',copyFallback:'Скопируйте текст заявки вручную.',note:'Это подготовка заявки; автоматическая отправка пока не подключена.',head:'Здесь может быть ваша реклама',form:'Обращение',back:'Вернуться на главную'},
-    de:{ad:'Werbung schalten',offer:'Zusammenarbeit vorschlagen',idea:'Idee vorschlagen',recipe:'Rezept vorschlagen',contact:'MixLabo kontaktieren',name:'Name oder Firma',email:'Ihre E-Mail-Adresse',message:'Ihre Nachricht',send:'Anfrage kopieren',copyOk:'Anfrage kopiert. Automatischer Versand ist noch nicht eingerichtet.',copyFallback:'Bitte kopieren Sie die Anfrage manuell.',note:'Die Anfrage wird vorbereitet; automatischer Versand ist noch nicht eingerichtet.',head:'Hier könnte Ihre Werbung stehen',form:'Anfrage',back:'Zur Startseite'}
+    ru:{ad:'Разместить рекламу',offer:'Предложить сотрудничество',idea:'Предложить идею',recipe:'Предложить рецепт',contact:'Связаться с MixLabo',name:'Имя или компания',email:'Ваш e-mail',message:'Ваше сообщение',send:'Отправить сообщение',copyOk:'Сообщение отправлено! Спасибо, мы свяжемся с вами.',copyFallback:'Не удалось отправить сообщение. Попробуйте ещё раз позже.',note:'Отправляя сообщение, вы соглашаетесь на обработку введённых данных для ответа через Formspree.',head:'Здесь может быть ваша реклама',form:'Обращение',back:'Вернуться на главную'},
+    de:{ad:'Werbung schalten',offer:'Zusammenarbeit vorschlagen',idea:'Idee vorschlagen',recipe:'Rezept vorschlagen',contact:'MixLabo kontaktieren',name:'Name oder Firma',email:'Ihre E-Mail-Adresse',message:'Ihre Nachricht',send:'Nachricht senden',copyOk:'Nachricht gesendet! Vielen Dank, wir melden uns bei Ihnen.',copyFallback:'Nachricht konnte nicht gesendet werden. Bitte später erneut versuchen.',note:'Mit dem Absenden stimmen Sie der Verarbeitung Ihrer Angaben zur Beantwortung über Formspree zu.',head:'Hier könnte Ihre Werbung stehen',form:'Anfrage',back:'Zur Startseite'}
   };
   const topics=['ad','offer','idea','recipe','contact'];
   const symbols=['📣','🤝','💡','🍸','✉'];
@@ -375,11 +375,27 @@ showInitialPhoto();
     panel.querySelectorAll('[data-ads-topic]').forEach(b=>b.addEventListener('click',()=>{
       chosen=b.dataset.adsTopic;const holder=document.getElementById('ml-ad-request');holder.innerHTML=formMarkup();
       const form=document.getElementById('ml-ad-form');form.scrollIntoView({block:'start',behavior:'smooth'});
-      form.onsubmit=async e=>{e.preventDefault();const t=tr[lang],fd=new FormData(form);
-        const message=[`MixLabo — ${t[chosen]}`, `${t.name}: ${fd.get('name')}`,`${t.email}: ${fd.get('email')}`,`${t.message}: ${fd.get('message')}`].join('\n');
-        const feedback=document.getElementById('ml-copy-feedback'),fallback=document.getElementById('ml-copy-fallback');
-        try{await navigator.clipboard.writeText(message);feedback.textContent=t.copyOk;fallback.hidden=true}
-        catch(err){fallback.hidden=false;fallback.value=message;feedback.textContent=t.copyFallback;fallback.focus();fallback.select()}
+      form.onsubmit=async e=>{
+        e.preventDefault();
+        if(!form.reportValidity())return;
+        const t=tr[lang],fd=new FormData(form),button=form.querySelector('[type="submit"]');
+        const feedback=document.getElementById('ml-copy-feedback');
+        fd.append('topic',t[chosen]);
+        fd.append('language',lang.toUpperCase());
+        fd.append('_subject','MixLabo — '+t[chosen]);
+        button.disabled=true;
+        feedback.textContent=lang==='ru'?'Отправляем сообщение…':'Nachricht wird gesendet…';
+        try{
+          const res=await fetch('https://formspree.io/f/xqpqglle',{
+            method:'POST',body:fd,headers:{'Accept':'application/json'}
+          });
+          if(!res.ok)throw new Error('Formspree status '+res.status);
+          feedback.textContent=t.copyOk;
+          form.reset();
+        }catch(err){
+          feedback.textContent=t.copyFallback;
+          console.error('MixLabo form:',err);
+        }finally{button.disabled=false}
       };
     }));
     panel.querySelector('[data-ad-home]').addEventListener('click',()=>show('home'));
