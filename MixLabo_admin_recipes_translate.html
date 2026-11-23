@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="ru">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -130,7 +131,7 @@ async function remoteTranslate(text,from,to){
   if(!text.trim())return '';
   const chunks=splitTranslation(text);let translated=[];
   for(const chunk of chunks){
-    const url=new URL('https://api.mymemory.translated.net/get');
+    const url=new globalThis.URL('https://api.mymemory.translated.net/get');
     url.searchParams.set('q',chunk);url.searchParams.set('langpair',from+'|'+to);
     const ctl=new AbortController();const timeout=setTimeout(()=>ctl.abort(),12000);
     let result;
