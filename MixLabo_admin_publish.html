@@ -231,7 +231,25 @@ async function prepareRecipeUpdate(){
  let added=0,skipped=0;
  for(const r of rows){
   const already=[...doc.querySelectorAll('article.recipe[data-lang="ru"] h2')].some(el=>el.textContent.trim().toLowerCase()===r.titleRu.trim().toLowerCase());
-  if(already){skipped++;continue}
+   
+if(already){
+  const cards=[...doc.querySelectorAll('article.recipe')];
+  const findCard=(lang,title)=>cards.find(a=>
+    a.dataset.lang===lang &&
+    a.querySelector('h2')?.textContent.trim().toLowerCase()===
+      title.trim().toLowerCase()
+  );
+  const oldRu=findCard('ru',r.titleRu);
+  const oldDe=findCard('de',r.titleDe);
+  if(!oldRu||!oldDe) throw Error('Не найдена пара RU/DE');
+  const img=getImages(r.id)[0]||'';
+  if(!img) throw Error('Нет изображения');
+  oldRu.replaceWith(recipeArticle(doc,r,'ru',img));
+  oldDe.replaceWith(recipeArticle(doc,r,'de',img));
+  added++;
+  continue;
+}
+
   const img=getImages()[r.id]||'';
   if(!img){skipped++;continue}
   for(const lang of ['ru','de'])foot.before(recipeArticle(doc,r,lang,img));
