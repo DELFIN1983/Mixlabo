@@ -245,14 +245,14 @@ $('recipeExport').onclick=async()=>{
  const btn=$('recipeExport');btn.disabled=true;status('Готовлю резервный файл…');
  try{
   const {content,added}=await prepareRecipeUpdate();
-  const url=globalThis.URL.createObjectURL(new Blob([content],{type:'text/html;charset=utf-8'}));
+  const url=globalThis.URL.createObjectURL(new Blob([content],{type:'text/html;charset=utf-8'})); 
   const link=document.createElement('a');link.href=url;link.download='recipes.html';document.body.append(link);link.click();link.remove();setTimeout(()=>globalThis.URL.revokeObjectURL(url),3000);
   status('Резервный файл готов. Добавлено '+added+' новых рецептов.');
  }catch(err){status('Ошибка: '+err.message,true)}finally{btn.disabled=false}
 };
 // The browser sends the authorization key only with an explicit user click.
 // NEVER embed GITHUB_TOKEN in this HTML. GitHub credentials remain server-side in Cloudflare.
-const PUBLISH_ENDPOINT='https://solitary-snowflake-6d1f.kislowodsk63.workers.dev/'; publish
+const PUBLISH_ENDPOINT='https://solitary-snowflake-6d1f.kislowodsk63.workers.dev/publish';
 $('recipePublish').onclick=async()=>{
  const btn=$('recipePublish'),info=$('publishStatus');
  const publishKey=$('publishKey').value.trim();
