@@ -242,7 +242,7 @@ if(already){
   const oldRu=findCard('ru',r.titleRu);
   const oldDe=findCard('de',r.titleDe);
   if(!oldRu||!oldDe) throw Error('Не найдена пара RU/DE');
-  const img=getImages(r.id)[0]||'';
+  const img=getImages()[r.id]||'';
   if(!img) throw Error('Нет изображения');
   oldRu.replaceWith(recipeArticle(doc,r,'ru',img));
   oldDe.replaceWith(recipeArticle(doc,r,'de',img));
