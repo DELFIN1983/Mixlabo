@@ -76,7 +76,12 @@ function videoMarkup(){
  const stRu='Клубника — 120 г; молоко — 150 мл; ванильное мороженое — 80 г; лёд — 3 кубика. Взбейте клубнику, молоко и мороженое; перелейте в бокал и украсьте.';
  const stDe='120 g Erdbeeren, 150 ml Milch, 80 g Vanilleeis, 3 Eiswürfel. Alles im Mixer pürieren, ins Glas gießen und garnieren.';
  return `<div class="ml-video-gallery">
-  <h1>${heading}</h1>
+  <h1>${heading}</h1>  <div style="text-align:center;margin:15px 0;">
+  <a href="https://www.youtube.com/@Mixlabo_de" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:12px 25px;background:#ff0033;color:#fff;border-radius:25px;text-decoration:none;font-weight:bold;box-shadow:0 0 15px #ff0033;">
+    ▶ YouTube — MixLabo
+  </a>
+</div>
+
   <section class="ml-video-feature" aria-label="MixLabo Fantasy">
     <div class="ml-feature-tag">✨ ${featureLabel}</div>
     <h2>MixLabo Fantasy</h2><p>${featureInfo}</p>
