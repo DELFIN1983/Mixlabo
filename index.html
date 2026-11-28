@@ -42,19 +42,23 @@
 @media(max-width:700px){.ml-video-next{grid-template-columns:1fr}.ml-video-feature{padding:18px 10px}.ml-video-feature video{max-height:none}.ml-video-item{padding:13px}}
 
 .ml-honey{position:absolute!important;left:-10000px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important;opacity:0!important;pointer-events:none!important}
-</style></head><body><main class="stage" id="stage"><img alt="MixLabo — утверждённая главная страница" class="design" src="design.jpg"/><div aria-hidden="true" id="german-home"></div><div id="hotspots"></div><button class="review-entry" id="review-entry" type="button">Отзывы</button><section aria-live="polite" class="panel" id="panel"></section></main><script>
+#ml-en-desktop{position:absolute;z-index:4;top:10%;right:10%;border:1px solid #ff74e5;border-radius:20px;background:#140a20;color:white;font-weight:bold;padding:3px 10px;font-size:clamp(9px,1.1vw,15px)}#ml-en-desktop[aria-pressed=true]{box-shadow:0 0 10px #ff55be;border-color:#76f3ff}.ml-ad-page.is-en .ml-actual-actions{display:grid}.ml-ad-page.is-en .ml-image-hotspot{display:none}.ml-ad-page.is-en .ml-ad-image-wrap{display:none}@media(max-width:700px){#ml-en-desktop{display:none!important}.ml-langs button{padding:8px 5px!important;font-size:12px!important}.ml-head{flex-wrap:wrap}}
+</style></head><body><main class="stage" id="stage"><img alt="MixLabo — утверждённая главная страница" class="design" src="design.jpg"/><div aria-hidden="true" id="german-home"></div><div id="hotspots"></div><button id="ml-en-desktop" type="button" aria-label="English">EN</button><button class="review-entry" id="review-entry" type="button">Отзывы</button><section aria-live="polite" class="panel" id="panel"></section></main><script>
 const ru={home:'Главная',recipes:'Рецепты',videos:'Видео',ideas:'Идеи',partners:'Партнёры',title:'Популярные рецепты',soon:'Наши видео: сначала MixLabo Fantasy, затем ролики с рецептами коктейлей.',idea:'Скоро здесь будут новые идеи и сочетания вкусов.',partner:'Здесь появится информация для сотрудничества.',ingredients:'Ингредиенты',method:'Приготовление',back:'Назад к рецептам',reviews:'Отзывы',reviewRecipe:'О рецептах',reviewSite:'О сайте',reviewName:'Имя (необязательно)',reviewText:'Ваш комментарий',reviewRating:'Оценка',reviewChoose:'Выберите рецепт',reviewSend:'Опубликовать',reviewEmpty:'Пока нет комментариев.',reviewSaved:'Отзыв отправлен и появится после проверки.',reviewNote:'Отзывы доступны всем посетителям после одобрения модератором.',reviewRequired:'Напишите комментарий.',reviewLimit:'Максимум 500 символов.'};
 const de={home:'Startseite',recipes:'Rezepte',videos:'Videos',ideas:'Ideen',partners:'Partner',title:'Beliebte Rezepte',soon:'Unsere Videos: zuerst MixLabo Fantasy, danach Cocktail-Videos und Rezepte.',idea:'Hier erscheinen neue Geschmacksideen.',partner:'Hier finden Sie künftig Informationen zur Zusammenarbeit.',ingredients:'Zutaten',method:'Zubereitung',back:'Zurück zu Rezepten',reviews:'Bewertungen',reviewRecipe:'Zu Rezepten',reviewSite:'Zur Website',reviewName:'Name (optional)',reviewText:'Ihr Kommentar',reviewRating:'Bewertung',reviewChoose:'Rezept auswählen',reviewSend:'Veröffentlichen',reviewEmpty:'Noch keine Kommentare.',reviewSaved:'Bewertung gesendet und wird nach Freigabe veröffentlicht.',reviewNote:'Bewertungen sind nach der Freigabe für alle Besucher sichtbar.',reviewRequired:'Bitte Kommentar eingeben.',reviewLimit:'Maximal 500 Zeichen.'};
-let lang='ru', view='home';const items=[
+const en={"home": "Home", "recipes": "Recipes", "videos": "Videos", "ideas": "Ideas", "partners": "Partners", "title": "Popular recipes", "soon": "Our videos: MixLabo Fantasy, followed by cocktail recipes.", "idea": "New flavour ideas are coming soon.", "partner": "Information about partnerships is coming soon.", "ingredients": "Ingredients", "method": "Preparation", "back": "Back to recipes", "reviews": "Reviews", "reviewRecipe": "Recipe reviews", "reviewSite": "Website reviews", "reviewName": "Name (optional)", "reviewText": "Your comment", "reviewRating": "Rating", "reviewChoose": "Choose a recipe", "reviewSend": "Publish", "reviewEmpty": "No comments yet.", "reviewSaved": "Your review was submitted and will appear after moderation.", "reviewNote": "Reviews are visible to everyone after approval.", "reviewRequired": "Please enter a comment.", "reviewLimit": "Maximum 500 characters."};
+const L={ru,de,en};
+let lang='ru';try{lang=localStorage.getItem('mixlabo-lang')||'ru'}catch(e){}if(!L[lang])lang='ru';let view='home';const items=[
 {ru:'Клубничный смузи',de:'Erdbeer-Smoothie',img:'drink1.jpg',ruI:'Клубника 150 г, банан 1 шт., йогурт 100 мл.',deI:'150 g Erdbeeren, 1 Banane, 100 ml Joghurt.'},
 {ru:'Манго Мохито',de:'Mango-Mojito',img:'drink2.jpg',ruI:'Манго 100 г, лайм ½ шт., мята, газированная вода 150 мл.',deI:'100 g Mango, ½ Limette, Minze, 150 ml Sprudelwasser.'},
 {ru:'Tequila Sunrise',de:'Tequila Sunrise',img:'drink3.jpg',ruI:'Апельсиновый сок 150 мл, сироп гренадин 15 мл; безалкогольная версия.',deI:'150 ml Orangensaft, 15 ml Grenadine; alkoholfreie Variante.'},
 {ru:'Голубая лагуна',de:'Blaue Lagune',img:'drink4.jpg',ruI:'Лимонад 150 мл, сироп блю кюрасао без алкоголя 20 мл, лёд.',deI:'150 ml Limonade, 20 ml alkoholfreier Blue-Curaçao-Sirup, Eis.'},
 {ru:'Лесные ягоды',de:'Waldbeeren',img:'drink5.jpg',ruI:'Смесь ягод 150 г, йогурт 100 мл, мёд по вкусу.',deI:'150 g Beerenmischung, 100 ml Joghurt, Honig nach Geschmack.'},
 {ru:'Детокс Микс',de:'Detox-Mix',img:'drink6.jpg',ruI:'Огурец ½ шт., лайм ½ шт., мята, вода 150 мл.',deI:'½ Gurke, ½ Limette, Minze, 150 ml Wasser.'}];
+items.forEach((x,i)=>{[x.en,x.enI]=[["Strawberry smoothie", "150 g strawberries, 1 banana, 100 ml yogurt."], ["Mango Mojito", "100 g mango, ½ lime, mint, 150 ml sparkling water."], ["Tequila Sunrise", "150 ml orange juice, 15 ml grenadine; alcohol-free version."], ["Blue Lagoon", "150 ml lemonade, 20 ml alcohol-free blue curaçao syrup, ice."], ["Wild berries", "150 g mixed berries, 100 ml yogurt, honey to taste."], ["Detox mix", "½ cucumber, ½ lime, mint, 150 ml water."]][i]});
 const positions=[['home',35.5,0,9.5,13],['recipes',45,0,9,13],['videos',55,0,9,13],['ideas',65,0,8,13],['partners',73,0,10,13],['ru',85.5,1,7,10],['de',92.5,1,6.5,10],['recipes',4,46,27,9],['recipes',78,69,21,7]];
 for(let i=0;i<6;i++)positions.push(['item'+i,3.3+i*16.05,76.5,15.5,21]);
-const hot=document.getElementById('hotspots');positions.forEach(([key,x,y,w,h])=>{let b=document.createElement('button');b.className='hot';b.style.cssText=`left:${x}%;top:${y}%;width:${w}%;height:${h}%`;b.setAttribute('aria-label',key);b.onclick=()=>{if(key==='ru'||key==='de'){lang=key;render()}else show(key)};hot.appendChild(b)});
+const hot=document.getElementById('hotspots');positions.forEach(([key,x,y,w,h])=>{let b=document.createElement('button');b.className='hot';b.style.cssText=`left:${x}%;top:${y}%;width:${w}%;height:${h}%`;b.setAttribute('aria-label',key);b.onclick=()=>{if(key==='ru'||key==='de'||key==='en'){lang=key;render()}else show(key)};hot.appendChild(b)});
 const ghome=document.getElementById('german-home');
 const overlays=[
 ['Startseite',35.6,6.2,9.2,6,'top pink'],['Rezepte',45.1,6.2,9.2,6,'top'],['Videos',55,6.2,9.2,6,'top'],['Ideen',65,6.2,8,6,'top'],['Partner',73,6.2,10,6,'top'],
@@ -63,14 +67,17 @@ const overlays=[
 ['Smoothies',3.6,61.5,14.7,4.6,'cat'],['Cocktails',19.7,61.5,14.7,4.6,'cat'],['Limonaden',35.7,61.5,14.7,4.6,'cat'],['Detox',51.7,61.5,14.7,4.6,'cat'],['Energie',67.7,61.5,14.7,4.6,'cat'],['Gesundheit',83.6,61.5,13.5,4.6,'cat'],
 ['Beliebte Rezepte',3.4,70.5,37,4,'pop'],['Alle Rezepte ansehen →',77,70.5,21,4,'all'],
 ['Erdbeer-Smoothie',3.4,90.8,15.1,5.3,'drink'],['Mango-Mojito',19.5,91.5,15.1,3.6,'drink'],['Tequila Sunrise',35.55,91.5,15.1,3.6,'drink'],['Blaue Lagune',51.6,91.5,15.1,3.6,'drink'],['Waldbeeren',67.65,91.5,15.1,3.6,'drink'],['Detox-Mix',83.7,91.5,13.4,3.6,'drink']];
-ghome.innerHTML=overlays.map(([label,x,y,w,h,cls])=>`<div class="tr ${cls}" style="left:${x}%;top:${y}%;width:${w}%;height:${h}%">${label}</div>`).join('');
+const englishOverlays=overlays.map((x,i)=>[["Home", "Recipes", "Videos", "Ideas", "Partners", "Cocktails", "Smoothies", "Lemonades", "Easy recipes · Fresh flavours · Ideas for every mood", "Explore recipes →", "Smoothies", "Cocktails", "Lemonades", "Detox", "Energy", "Wellness", "Popular recipes", "View all recipes →", "Strawberry smoothie", "Mango Mojito", "Tequila Sunrise", "Blue Lagoon", "Wild berries", "Detox mix"][i],...x.slice(1)]);
+function paintOverlay(){ghome.innerHTML=(lang==='en'?englishOverlays:overlays).map(([label,x,y,w,h,cls])=>`<div class="tr ${cls}" style="left:${x}%;top:${y}%;width:${w}%;height:${h}%">${label}</div>`).join('');}
+paintOverlay();
+document.getElementById('ml-en-desktop').onclick=()=>{lang='en';render()};
 function videoMarkup(){
- const german=lang==='de';
- const heading=german?'Unsere Videos':'Наши видео';
- const featureLabel=german?'Unser Fantasy-Highlight':'Главная премьера MixLabo';
- const featureInfo=german?'Magischer Cocktail · MixLabo Fantasy':'Волшебный коктейль · MixLabo Fantasy';
- const tropicalInfo=german?'Fruchtiger Cocktail · Rezept zum Nachmachen':'Фруктовый коктейль · Рецепт приготовления';
- const berryInfo=german?'Cremiger Erdbeer-Milchshake · Rezept':'Клубничный милкшейк · Рецепт приготовления';
+ const german=lang==='de', english=lang==='en';
+ const heading=english?'Our videos':german?'Unsere Videos':'Наши видео';
+ const featureLabel=english?'Our Fantasy highlight':german?'Unser Fantasy-Highlight':'Главная премьера MixLabo';
+ const featureInfo=english?'Magical cocktail · MixLabo Fantasy':german?'Magischer Cocktail · MixLabo Fantasy':'Волшебный коктейль · MixLabo Fantasy';
+ const tropicalInfo=english?'Fruity cocktail · Recipe to try':german?'Fruchtiger Cocktail · Rezept zum Nachmachen':'Фруктовый коктейль · Рецепт приготовления';
+ const berryInfo=english?'Creamy strawberry milkshake · Recipe':german?'Cremiger Erdbeer-Milchshake · Rezept':'Клубничный милкшейк · Рецепт приготовления';
  const trRu='Манговый сок — 100 мл; ананасовый сок — 60 мл; сироп Blue Curaçao без алкоголя — 15 мл; гренадин — 15 мл; лимонный сок — 10 мл; лёд и фрукты. Налейте сироп, затем соки, добавьте Blue Curaçao и украсьте.';
  const trDe='100 ml Mangosaft, 60 ml Ananassaft, 15 ml alkoholfreier Blue-Curaçao-Sirup, 15 ml Grenadine, 10 ml Zitronensaft, Eis und Obst. Sirup und Säfte eingießen, Blue Curaçao zugeben und garnieren.';
  const stRu='Клубника — 120 г; молоко — 150 мл; ванильное мороженое — 80 г; лёд — 3 кубика. Взбейте клубнику, молоко и мороженое; перелейте в бокал и украсьте.';
@@ -93,18 +100,18 @@ function videoMarkup(){
    <section class="ml-video-item"><h2>🍹 Tropical Mirage</h2><p>${tropicalInfo}</p>
      <video controls playsinline preload="metadata" poster="MixLabo_Tropical_Poster.jpg" aria-label="Tropical Mirage">
        <source src="MixLabo_Tropical_Mirage_20s_with_original_sound.mp4" type="video/mp4">
-     </video><details><summary>${german?'Rezept anzeigen':'Показать рецепт'}</summary><p>${german?trDe:trRu}</p></details>
+     </video><details><summary>${english?'Show recipe':german?'Rezept anzeigen':'Показать рецепт'}</summary><p>${english?'100 ml mango juice, 60 ml pineapple juice, 15 ml alcohol-free blue curaçao syrup, 15 ml grenadine, 10 ml lemon juice, ice and fruit. Pour in syrup and juices, add blue curaçao and garnish.':german?trDe:trRu}</p></details>
    </section>
-   <section class="ml-video-item"><h2>🍓 ${german?'Erdbeer-Milchshake':'Клубничный милкшейк'}</h2><p>${berryInfo}</p>
+   <section class="ml-video-item"><h2>🍓 ${english?'Strawberry milkshake':german?'Erdbeer-Milchshake':'Клубничный милкшейк'}</h2><p>${berryInfo}</p>
      <video controls playsinline preload="metadata" poster="MixLabo_Strawberry_Poster.jpg" aria-label="Strawberry Milkshake">
        <source src="MixLabo_Strawberry_Milkshake.mp4" type="video/mp4">
-     </video><details><summary>${german?'Rezept anzeigen':'Показать рецепт'}</summary><p>${german?stDe:stRu}</p></details>
+     </video><details><summary>${english?'Show recipe':german?'Rezept anzeigen':'Показать рецепт'}</summary><p>${english?'120 g strawberries, 150 ml milk, 80 g vanilla ice cream, 3 ice cubes. Blend, pour into a glass and garnish.':german?stDe:stRu}</p></details>
    </section>
   </div>
  </div>`;
 }
 function stopVideoPlayers(){document.querySelectorAll('#panel video').forEach(v=>v.pause())}
-function show(v){if(v==='recipes'){window.location.href='recipes.html';return;}stopVideoPlayers();view=v;render()}function render(){ghome.classList.toggle('active',lang==='de'&&view==='home');const p=document.getElementById('panel'),t=lang==='ru'?ru:de;if(view==='home'){p.classList.remove('active');p.innerHTML='';document.getElementById('review-entry').style.display='block';document.getElementById('review-entry').textContent=t.reviews;return}document.getElementById('review-entry').style.display='none';p.classList.add('active');const nav=`<div class="bar"><div class="brand">MixLabo</div><div class="nav">${['home','recipes','videos','ideas','partners','reviews'].map(k=>`<button data-go="${k}">${t[k]}</button>`).join('')}<button data-lang="ru">🇷🇺 RU</button><button data-lang="de">🇩🇪 DE</button></div></div>`;let body='';if(view==='reviews'){body=reviewMarkup(t)}else if(view==='recipes'){body=`<h1>${t.title}</h1><div class="cards">${items.map((r,i)=>`<button class="card" data-go="item${i}"><img src="${r.img}" alt=""><strong>${r[lang]}</strong></button>`).join('')}</div>`}else if(view.startsWith('item')){let r=items[Number(view.slice(4))];body=`<div class="recipe"><img src="${r.img}" alt=""><h1>${r[lang]}</h1><h2>${t.ingredients}</h2><p>${r[lang+'I']}</p><h2>${t.method}</h2><p>${lang==='ru'?'Подготовьте ингредиенты, смешайте в блендере или стакане, подавайте охлаждённым.':'Zutaten vorbereiten, im Mixer oder Glas vermischen und gekühlt servieren.'}</p><button class="back" data-go="recipes">${t.back}</button></div>`}else if(view==='videos'){body=videoMarkup()}else{let msg=view==='ideas'?t.idea:t.partner;body=`<h1>${t[view]}</h1><p class="muted">${msg}</p>`}p.innerHTML=nav+body;p.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go));p.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{lang=b.dataset.lang;render()});if(view==='reviews')wireReviews(t)}
+function show(v){if(v==='recipes'){window.location.href='recipes.html?lang='+encodeURIComponent(lang);return;}stopVideoPlayers();view=v;render()}function render(){paintOverlay();try{localStorage.setItem('mixlabo-lang',lang)}catch(e){}document.title=lang==='en'?'MixLabo — Flavour laboratory':lang==='de'?'MixLabo — Geschmackslabor':'MixLabo — Лаборатория вкуса';document.getElementById('ml-en-desktop').hidden=view!=='home';document.getElementById('ml-en-desktop').setAttribute('aria-pressed',lang==='en');ghome.classList.toggle('active',lang!=='ru'&&view==='home');const p=document.getElementById('panel'),t=L[lang];if(view==='home'){p.classList.remove('active');p.innerHTML='';document.getElementById('review-entry').style.display='block';document.getElementById('review-entry').textContent=t.reviews;return}document.getElementById('review-entry').style.display='none';p.classList.add('active');const nav=`<div class="bar"><div class="brand">MixLabo</div><div class="nav">${['home','recipes','videos','ideas','partners','reviews'].map(k=>`<button data-go="${k}">${t[k]}</button>`).join('')}<button data-lang="ru">🇷🇺 RU</button><button data-lang="de">🇩🇪 DE</button><button data-lang="en">EN</button></div></div>`;let body='';if(view==='reviews'){body=reviewMarkup(t)}else if(view==='recipes'){body=`<h1>${t.title}</h1><div class="cards">${items.map((r,i)=>`<button class="card" data-go="item${i}"><img src="${r.img}" alt=""><strong>${r[lang]}</strong></button>`).join('')}</div>`}else if(view.startsWith('item')){let r=items[Number(view.slice(4))];body=`<div class="recipe"><img src="${r.img}" alt=""><h1>${r[lang]}</h1><h2>${t.ingredients}</h2><p>${r[lang+'I']}</p><h2>${t.method}</h2><p>${lang==='en'?'Prepare the ingredients, mix in a blender or glass and serve chilled.':lang==='ru'?'Подготовьте ингредиенты, смешайте в блендере или стакане, подавайте охлаждённым.':'Zutaten vorbereiten, im Mixer oder Glas vermischen und gekühlt servieren.'}</p><button class="back" data-go="recipes">${t.back}</button></div>`}else if(view==='videos'){body=videoMarkup()}else{let msg=view==='ideas'?t.idea:t.partner;body=`<h1>${t[view]}</h1><p class="muted">${msg}</p>`}p.innerHTML=nav+body;p.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go));p.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{lang=b.dataset.lang;render()});if(view==='reviews')wireReviews(t)}
 
 // Public Supabase REST API. Insert only unapproved reviews; display approved ones.
 // Fill in ONLY your project's public URL and sb_publishable_ key. NEVER use sb_secret_ or service_role.
@@ -124,8 +131,8 @@ async function reviewsFetch(path,options={}){
 async function drawReviews(t){
   const box=document.getElementById('review-list');if(!box)return;
   const request=++reviewRequest,tab=reviewTab;
-  if(!REVIEWS_READY){box.textContent=lang==='ru'?'Необходимо заполнить настройки Supabase.':'Supabase-Einstellungen fehlen.';return}
-  box.textContent=lang==='ru'?'Загружаем отзывы…':'Bewertungen werden geladen…';
+  if(!REVIEWS_READY){box.textContent=lang==='en'?'Supabase settings are missing.':lang==='ru'?'Необходимо заполнить настройки Supabase.':'Supabase-Einstellungen fehlen.';return}
+  box.textContent=lang==='en'?'Loading reviews…':lang==='ru'?'Загружаем отзывы…':'Bewertungen werden geladen…';
   try{
     const response=await reviewsFetch('?select=id,created_at,name,comment,rating,recipe_id&approved=eq.true&order=created_at.desc&limit=100');
     const data=await response.json();
@@ -135,10 +142,10 @@ async function drawReviews(t){
       const stars=Number.isInteger(r.rating)?Math.min(5,Math.max(1,r.rating)):5;
       const recipeIndex=items.findIndex(x=>x.img===r.recipe_id+'.jpg');
       const recipeLabel=recipeIndex>=0?' · '+safe(items[recipeIndex][lang]):'';
-      const time=new Date(r.created_at);const date=Number.isFinite(time.getTime())?time.toLocaleString(lang==='ru'?'ru-RU':'de-DE'):'';
-      return `<article class="review-post"><strong>${safe(r.name||(lang==='ru'?'Гость':'Gast'))}</strong> <span class="review-stars">${'★'.repeat(stars)}${'☆'.repeat(5-stars)}</span>${recipeLabel}<p>${safe(r.comment)}</p><small>${safe(date)}</small></article>`
+      const time=new Date(r.created_at);const date=Number.isFinite(time.getTime())?time.toLocaleString(lang==='en'?'en-GB':lang==='ru'?'ru-RU':'de-DE'):'';
+      return `<article class="review-post"><strong>${safe(r.name||(lang==='en'?'Guest':lang==='ru'?'Гость':'Gast'))}</strong> <span class="review-stars">${'★'.repeat(stars)}${'☆'.repeat(5-stars)}</span>${recipeLabel}<p>${safe(r.comment)}</p><small>${safe(date)}</small></article>`
     }).join(''):`<p class="muted">${t.reviewEmpty}</p>`;
-  }catch(e){if(request===reviewRequest&&box.isConnected)box.textContent=lang==='ru'?'Не удалось загрузить отзывы. Проверьте подключение Supabase.':'Bewertungen konnten nicht geladen werden.';console.error('MixLabo reviews load:',e)}
+  }catch(e){if(request===reviewRequest&&box.isConnected)box.textContent=lang==='en'?'Unable to load reviews.':lang==='ru'?'Не удалось загрузить отзывы. Проверьте подключение Supabase.':'Bewertungen konnten nicht geladen werden.';console.error('MixLabo reviews load:',e)}
 }
 function wireReviews(t){
   document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{reviewTab=b.dataset.tab;render()});
@@ -148,19 +155,19 @@ function wireReviews(t){
     const feedback=document.getElementById('review-feedback');
     if(!message){feedback.textContent=t.reviewRequired;return}
     if(message.length>500){feedback.textContent=t.reviewLimit;return}
-    if(!REVIEWS_READY){feedback.textContent=lang==='ru'?'Не настроен Supabase.':'Supabase ist nicht konfiguriert.';return}
+    if(!REVIEWS_READY){feedback.textContent=lang==='en'?'Supabase is not configured.':lang==='ru'?'Не настроен Supabase.':'Supabase ist nicht konfiguriert.';return}
     const rating=Number(fd.get('rating'));
     const selected=Number(fd.get('drink'));
     const recipeId=reviewTab==='recipe'&&Number.isInteger(selected)&&selected>=0&&selected<items.length?'drink'+(selected+1):null;
     if(reviewTab==='recipe'&&!recipeId){feedback.textContent=t.reviewChoose;return}
     const body={name:String(fd.get('author')||'').trim().slice(0,40),comment:message,rating:Number.isInteger(rating)&&rating>=1&&rating<=5?rating:5,approved:false,recipe_id:recipeId};
     const submit=f.querySelector('[type="submit"]');submit.disabled=true;
-    feedback.textContent=lang==='ru'?'Отправляем…':'Wird gesendet…';
+    feedback.textContent=lang==='en'?'Sending…':lang==='ru'?'Отправляем…':'Wird gesendet…';
     try{
       await reviewsFetch('',{method:'POST',headers:{'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(body)});
       if(f.isConnected){f.reset();feedback.textContent=t.reviewSaved;}
       await drawReviews(t);
-    }catch(err){if(f.isConnected)feedback.textContent=lang==='ru'?'Ошибка отправки. Проверьте настройки Supabase.':'Senden fehlgeschlagen. Supabase-Einstellungen prüfen.';console.error('MixLabo review submit:',err)}
+    }catch(err){if(f.isConnected)feedback.textContent=lang==='en'?'Submission failed. Check Supabase settings.':lang==='ru'?'Ошибка отправки. Проверьте настройки Supabase.':'Senden fehlgeschlagen. Supabase-Einstellungen prüfen.';console.error('MixLabo review submit:',err)}
     finally{if(submit.isConnected)submit.disabled=false}
   };
   drawReviews(t)
@@ -229,23 +236,23 @@ render();
     if (typeof lang === 'undefined' || typeof view === 'undefined') return;
     mobile.hidden = view !== 'home';
     if (view !== 'home') return;
-    const german = lang === 'de';
-    const navNames = german ? ['Start','Rezepte','Videos','Ideen','Partner'] : ['Главная','Рецепты','Видео','Идеи','Партнёры'];
-    const cats = german ? ['Smoothies','Cocktails','Limonaden','Detox','Energie','Gesundheit'] : ['Смузи','Коктейли','Лимонады','Детокс','Энергия','Здоровье'];
-    const intro = german ? 'Einfache Rezepte · Frische Aromen · Ideen für jede Stimmung' : 'Простые рецепты · Яркие вкусы · Идеи для любого настроения';
+    const german = lang === 'de', english = lang === 'en';
+    const navNames = english ? ['Home','Recipes','Videos','Ideas','Partners'] : german ? ['Start','Rezepte','Videos','Ideen','Partner'] : ['Главная','Рецепты','Видео','Идеи','Партнёры'];
+    const cats = english ? ['Smoothies','Cocktails','Lemonades','Detox','Energy','Wellness'] : german ? ['Smoothies','Cocktails','Limonaden','Detox','Energie','Gesundheit'] : ['Смузи','Коктейли','Лимонады','Детокс','Энергия','Здоровье'];
+    const intro = english ? 'Easy recipes · Fresh flavours · Ideas for every mood' : german ? 'Einfache Rezepte · Frische Aromen · Ideen für jede Stimmung' : 'Простые рецепты · Яркие вкусы · Идеи для любого настроения';
     mobile.innerHTML = `
       <header class="ml-head"><div class="ml-logo">🍸 MixLabo</div><div class="ml-langs">
-        <button type="button" data-ml-lang="ru" aria-pressed="${!german}">🇷🇺 RU</button>
-        <button type="button" data-ml-lang="de" aria-pressed="${german}">🇩🇪 DE</button>
+        <button type="button" data-ml-lang="ru" aria-pressed="${lang==='ru'}">🇷🇺 RU</button>
+        <button type="button" data-ml-lang="de" aria-pressed="${german}">🇩🇪 DE</button><button type="button" data-ml-lang="en" aria-pressed="${english}">EN</button>
       </div></header>
-      <nav class="ml-nav" aria-label="${german?'Navigation':'Навигация'}">${['home','recipes','videos','ideas','partners'].map((x,i)=>`<button type="button" data-ml-go="${x}"><span>${['⌂','🍸','▶','💡','🤝'][i]}</span>${navNames[i]}</button>`).join('')}</nav>
-      <section class="ml-banner"><h1><span class="ml-pink">${german?'Cocktails':'Коктейли'}</span><br><span class="ml-green">${german?'Smoothies':'Смузи'}</span><br><span class="ml-yellow">${german?'Limonaden':'Лимонады'}</span></h1>
-        <p>${intro}</p><button type="button" data-ml-go="recipes">${german?'Zu den Rezepten →':'Перейти к рецептам →'}</button>
+      <nav class="ml-nav" aria-label="${english?'Navigation':german?'Navigation':'Навигация'}">${['home','recipes','videos','ideas','partners'].map((x,i)=>`<button type="button" data-ml-go="${x}"><span>${['⌂','🍸','▶','💡','🤝'][i]}</span>${navNames[i]}</button>`).join('')}</nav>
+      <section class="ml-banner"><h1><span class="ml-pink">${english?'Cocktails':german?'Cocktails':'Коктейли'}</span><br><span class="ml-green">${english?'Smoothies':german?'Smoothies':'Смузи'}</span><br><span class="ml-yellow">${english?'Lemonades':german?'Limonaden':'Лимонады'}</span></h1>
+        <p>${intro}</p><button type="button" data-ml-go="recipes">${english?'Explore recipes →':german?'Zu den Rezepten →':'Перейти к рецептам →'}</button>
         <img class="ml-banner-art" src="design.jpg" alt="MixLabo"></section>
       <div class="ml-cats">${cats.map(c=>`<button type="button" data-ml-go="recipes">${c}</button>`).join('')}</div>
-      <section aria-label="${german?'Beliebte Rezepte':'Популярные рецепты'}"><div class="ml-section-title"><h2>${german?'Beliebte Rezepte':'Популярные рецепты'}</h2><button type="button" data-ml-go="recipes">${german?'Alle ansehen →':'Все рецепты →'}</button></div>
+      <section aria-label="${english?'Popular recipes':german?'Beliebte Rezepte':'Популярные рецепты'}"><div class="ml-section-title"><h2>${english?'Popular recipes':german?'Beliebte Rezepte':'Популярные рецепты'}</h2><button type="button" data-ml-go="recipes">${english?'View all recipes →':german?'Alle ansehen →':'Все рецепты →'}</button></div>
       <div class="ml-grid">${items.map((r,i)=>`<button class="ml-card" type="button" data-ml-go="item${i}"><img src="${r.img}" alt="" loading="lazy"><strong>${r[lang]}</strong></button>`).join('')}</div></section>
-      <button type="button" class="ml-review" data-ml-go="reviews">⭐ ${german?'Bewertungen':'Отзывы'}</button>`;
+      <button type="button" class="ml-review" data-ml-go="reviews">⭐ ${english?'Reviews':german?'Bewertungen':'Отзывы'}</button>`;
     mobile.querySelectorAll('[data-ml-go]').forEach(b=>b.addEventListener('click',()=>{show(b.dataset.mlGo);window.scrollTo(0,0)}));
     mobile.querySelectorAll('[data-ml-lang]').forEach(b=>b.addEventListener('click',()=>{lang=b.dataset.mlLang;render()}));
   }
@@ -362,12 +369,13 @@ showInitialPhoto();
     ru:{ad:'Разместить рекламу',offer:'Предложить сотрудничество',idea:'Предложить идею',recipe:'Предложить рецепт',contact:'Связаться с MixLabo',name:'Имя или компания',email:'Ваш e-mail',message:'Ваше сообщение',send:'Отправить сообщение',copyOk:'Сообщение отправлено! Спасибо, мы свяжемся с вами.',copyFallback:'Не удалось отправить сообщение. Попробуйте ещё раз позже.',note:'Отправляя сообщение, вы соглашаетесь на обработку введённых данных для ответа через Formspree.',head:'Здесь может быть ваша реклама',form:'Обращение',back:'Вернуться на главную'},
     de:{ad:'Werbung schalten',offer:'Zusammenarbeit vorschlagen',idea:'Idee vorschlagen',recipe:'Rezept vorschlagen',contact:'MixLabo kontaktieren',name:'Name oder Firma',email:'Ihre E-Mail-Adresse',message:'Ihre Nachricht',send:'Nachricht senden',copyOk:'Nachricht gesendet! Vielen Dank, wir melden uns bei Ihnen.',copyFallback:'Nachricht konnte nicht gesendet werden. Bitte später erneut versuchen.',note:'Mit dem Absenden stimmen Sie der Verarbeitung Ihrer Angaben zur Beantwortung über Formspree zu.',head:'Hier könnte Ihre Werbung stehen',form:'Anfrage',back:'Zur Startseite'}
   };
+  tr.en={"ad": "Advertise with us", "offer": "Propose a partnership", "idea": "Suggest an idea", "recipe": "Suggest a recipe", "contact": "Contact MixLabo", "name": "Name or company", "email": "Your email", "message": "Your message", "send": "Send message", "copyOk": "Message sent! Thank you, we will contact you.", "copyFallback": "Unable to send your message. Please try again later.", "note": "By submitting, you agree to the processing of your information to respond via Formspree.", "head": "Your advertising could appear here", "form": "Enquiry", "back": "Back to home"};
   const topics=['ad','offer','idea','recipe','contact'];
   const symbols=['📣','🤝','💡','🍸','✉'];
   let chosen='ad';
   function actionButtons(){const t=tr[lang];return `<div class="ml-actual-actions">${topics.map((topic,i)=>`<button type="button" data-ads-topic="${topic}">${symbols[i]} ${t[topic]}</button>`).join('')}</div>`}
-  function adMarkup(){const t=tr[lang];return `<section class="ml-ad-page ${lang==='de'?'is-de':''}" aria-label="${t.head}">
-     <div class="ml-ad-switch"><button type="button" data-ads-lang="ru">RU</button><button type="button" data-ads-lang="de">DE</button></div>
+  function adMarkup(){const t=tr[lang];return `<section class="ml-ad-page ${lang==='en'?'is-en':lang==='de'?'is-de':''}" aria-label="${t.head}">
+     <div class="ml-ad-switch"><button type="button" data-ads-lang="ru">RU</button><button type="button" data-ads-lang="de">DE</button><button type="button" data-ads-lang="en">EN</button></div>${lang==='en'?`<h1 class="ml-de-ad-heading">${t.head}</h1>`:''}
      <div class="ml-ad-image-wrap"><img src="${lang==='de'?'MixLabo_Advertising_Page_DE.jpg':'MixLabo_Advertising_Page.jpg'}" class="ml-ad-image" alt="MixLabo — ${t.head}; три разноцветных коктейля и пять вариантов обращения">
        ${topics.map((topic,i)=>`<button type="button" class="ml-image-hotspot" data-ads-topic="${topic}" style="left:${3+i*19.2}%;width:18.8%" aria-label="${t[topic]}"></button>`).join('')}
      </div>
@@ -387,7 +395,7 @@ showInitialPhoto();
       const checkEmail=()=>{
         const value=emailField.value.trim();
         const valid=!value || /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(value);
-        emailField.setCustomValidity(valid?'':lang==='ru'?'Укажите полный e-mail, например name@example.com':'Bitte eine vollständige E-Mail-Adresse eingeben, z. B. name@example.com');
+        emailField.setCustomValidity(valid?'':lang==='en'?'Enter a complete email address, e.g. name@example.com':lang==='ru'?'Укажите полный e-mail, например name@example.com':'Bitte eine vollständige E-Mail-Adresse eingeben, z. B. name@example.com');
       };
       emailField.addEventListener('input',checkEmail);
       emailField.addEventListener('blur',checkEmail);
@@ -402,7 +410,7 @@ showInitialPhoto();
         fd.append('language',lang.toUpperCase());
         fd.append('_subject','MixLabo — '+t[chosen]);
         button.disabled=true;
-        feedback.textContent=lang==='ru'?'Отправляем сообщение…':'Nachricht wird gesendet…';
+        feedback.textContent=lang==='en'?'Sending message…':lang==='ru'?'Отправляем сообщение…':'Nachricht wird gesendet…';
         try{
           const res=await fetch('https://formspree.io/f/xqpqglle',{
             method:'POST',body:fd,headers:{'Accept':'application/json'}
